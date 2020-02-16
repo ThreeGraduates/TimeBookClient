@@ -63,8 +63,9 @@ public class ForgetActivity extends AppCompatActivity {
                     failToast.setGravity(Gravity.TOP,0,400);
                     failToast.show();
                 }else{
+                    String email = etEmail.getText().toString();
                     final Request request = new Request.Builder()
-                            .url(serverPath+"user/sendEmail")
+                            .url(serverPath+"user/sendEmail?email="+email)
                             .build();
                     OkHttpClient forgetClient = new OkHttpClient();
                     Call forgetCall = forgetClient.newCall(request);
