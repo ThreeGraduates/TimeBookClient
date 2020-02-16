@@ -3,4 +3,5 @@
     <color name="colorGray">#a3a3a3</color>
     <color name="loginButton">#ea615a</color>
     <color name="themeText">#ea615a</color>
+    <color name="inkGray">#333333</color>
 </resources>

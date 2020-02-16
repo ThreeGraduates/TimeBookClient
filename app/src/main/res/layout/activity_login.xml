@@ -34,7 +34,7 @@
             android:textSize="18sp"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
-            android:textColor="@android:color/black"
+            android:textColor="@color/inkGray"
             android:layout_width="match_parent"
             android:layout_height="45dp" />
     </LinearLayout>
@@ -70,7 +70,7 @@
             android:textSize="18sp"
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
-            android:textColor="@android:color/black"
+            android:textColor="@color/inkGray"
             android:layout_width="match_parent"
             android:layout_height="45dp" />
     </LinearLayout>

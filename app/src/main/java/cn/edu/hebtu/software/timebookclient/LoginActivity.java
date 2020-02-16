@@ -122,14 +122,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //点击忘记密码
         tvForget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //点击跳转到忘记密码页面
-
+                //跳转到忘记密码页面
+                Intent forgetIntent = new Intent(LoginActivity.this,ForgetActivity.class);
+                startActivity(forgetIntent);
             }
         });
 
+        //点击注册按钮
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到注册页面
+                Intent registerIntent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(registerIntent);
+            }
+        });
 
     }
 
@@ -143,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    //登录中异步连接时需要的响应
     private class LoginHandler extends Handler{
 
         @Override
