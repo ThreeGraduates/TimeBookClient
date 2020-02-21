@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <cn.edu.hebtu.software.timebookclient.Util.CircleImageView
+        android:id="@+id/iv_color"
+        android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
+    <TextView
+        android:id="@+id/tv_title"
+        android:text="今天"
+        android:textSize="20sp"
+        android:textColor="@color/inkGray"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/iv_color"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"/>
+    <!--所有任务的总时间-->
+    <TextView
+        android:id="@+id/tv_time"
+        android:text="144"
+        android:textColor="@color/colorGray"
+        android:textSize="20sp"
+        android:layout_marginRight="3dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/tv_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
+    <TextView
+        android:id="@+id/tv_unit"
+        android:text="min"
+        android:textColor="@color/colorGray"
+        android:textSize="20sp"
+        android:layout_marginRight="15dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
+
+    <!--任务数量-->
+    <TextView
+        android:id="@+id/tv_count"
+        android:text="3"
+        android:textSize="20sp"
+        android:textColor="@color/colorGray"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
+
+</RelativeLayout>
