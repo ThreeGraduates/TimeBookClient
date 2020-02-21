@@ -1,4 +1,4 @@
-package cn.edu.hebtu.software.timebookclient;
+package cn.edu.hebtu.software.timebookclient.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,10 +21,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import cn.edu.hebtu.software.timebookclient.Bean.User;
+import cn.edu.hebtu.software.timebookclient.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;

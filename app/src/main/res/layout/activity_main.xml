@@ -5,13 +5,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
 
- <TextView
-     android:text="主页"
-     android:textSize="50sp"
-     android:layout_centerInParent="true"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <!--用户头像-->
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:background="@drawable/avatar"
+            android:layout_centerVertical="true"
+            android:layout_margin="15dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
+        <!--用户名-->
+        <TextView
+            android:id="@+id/tv_username"
+            android:text="用户名"
+            android:textColor="@color/inkGray"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+        <!--用户个性签名-->
+        <TextView
+            android:id="@+id/tv_signature"
+            android:text="珍惜时间，珍惜当下"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorGray"
+            android:layout_toRightOf="@id/tv_username"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+        <!--数据logo-->
+        <ImageView
+            android:id="@+id/iv_data"
+            android:background="@drawable/data"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/lv_datelist"
+        android:layout_below="@id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+    <ListView
+        android:id="@+id/lv_tasklist"
+        android:layout_below="@id/lv_datelist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/rl_create"
+        android:layout_below="@id/lv_tasklist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/add"
+            android:layout_margin="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:layout_toRightOf="@id/add"
+            android:text="创建清单"
+            android:textColor="@color/warmRed"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+    </RelativeLayout>
 </RelativeLayout>

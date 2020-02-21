@@ -18,7 +18,7 @@ public class User {
     //用户设置的长时休息间隔 单位：分钟
     private Integer longRestInterval;
     private Date createTime;
-    private String signature;
+    private String signature;//用户个性签名
 
     public User() {
     }

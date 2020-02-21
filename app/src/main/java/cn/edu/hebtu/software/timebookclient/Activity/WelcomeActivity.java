@@ -1,19 +1,15 @@
-package cn.edu.hebtu.software.timebookclient;
+package cn.edu.hebtu.software.timebookclient.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+
+import cn.edu.hebtu.software.timebookclient.R;
 
 public class WelcomeActivity extends AppCompatActivity {
 

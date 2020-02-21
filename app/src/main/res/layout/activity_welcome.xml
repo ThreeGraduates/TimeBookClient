@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/welcome"
     android:gravity="bottom"
-    tools:context=".WelcomeActivity">
+    tools:context=".Activity.WelcomeActivity">
 
 </LinearLayout>

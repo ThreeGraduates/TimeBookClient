@@ -1,4 +1,4 @@
-package cn.edu.hebtu.software.timebookclient;
+package cn.edu.hebtu.software.timebookclient.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,11 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.RequestBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import cn.edu.hebtu.software.timebookclient.Bean.User;
+import cn.edu.hebtu.software.timebookclient.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;

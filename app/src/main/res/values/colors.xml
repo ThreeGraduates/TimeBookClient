@@ -4,4 +4,24 @@
     <color name="loginButton">#ea615a</color>
     <color name="themeText">#ea615a</color>
     <color name="inkGray">#333333</color>
+    <color name="lessGray">#d5d5d5</color>
+    <color name="warmRed">#EA615A</color>
+    <color name="color1">#D5DFE0</color>
+    <color name="color2">#2C4D83</color>
+    <color name="color3">#68C3E9</color>
+    <color name="color4">#F4B456</color>
+    <color name="color5">#3B3B3B</color>
+    <color name="color6">#DB446C</color>
+    <color name="color7">#F8D651</color>
+    <color name="color8">#A0CF62</color>
+    <color name="color9">#E3778F</color>
+    <color name="color10">#8E73B5</color>
+    <color name="color11">#56BCA6</color>
+    <color name="color12">#83E2AE</color>
+    <color name="color13">#7E2CDF</color>
+    <color name="color14">#4672F7</color>
+    <color name="color15">#EA5EE8</color>
+    <color name="color16">#ED6B66</color>
+    <color name="color17">#B6B4B7</color>
+    <color name="color18">#B79A8F</color>
 </resources>
