@@ -58,7 +58,7 @@
         android:id="@+id/lv_datelist"
         android:layout_below="@id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="wrap_content"/>
     <ListView
         android:id="@+id/lv_tasklist"
         android:layout_below="@id/lv_datelist"
@@ -71,6 +71,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/add"
+            android:background="@drawable/add"
             android:layout_margin="20dp"
             android:layout_width="30dp"
             android:layout_height="30dp" />

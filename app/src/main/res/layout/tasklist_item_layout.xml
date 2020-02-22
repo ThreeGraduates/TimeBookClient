@@ -4,9 +4,9 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <cn.edu.hebtu.software.timebookclient.Util.CircleImageView
+    <ImageView
         android:id="@+id/iv_color"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="25dp"
         android:layout_centerVertical="true"
         android:layout_width="20dp"
         android:layout_height="20dp" />

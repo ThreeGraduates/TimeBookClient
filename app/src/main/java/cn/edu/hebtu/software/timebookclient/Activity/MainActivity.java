@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.edu.hebtu.software.timebookclient.Adapter.DateListAdapter;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         Long id = sharedPreferences.getLong("userId",0);
         Integer userId = id.intValue();
 
-        //开启异步请求
+        //开启异步请求获取任务清单数据
         Request request = new Request.Builder()
                 .url(serverPath+"user/getUserDetail?userId="+userId)
                 .build();
@@ -104,17 +105,43 @@ public class MainActivity extends AppCompatActivity {
                 Gson gson = new GsonBuilder().serializeNulls().create();
                 currentUser = gson.fromJson(userObject.toString(),User.class);
                 //将JSONArray中的dateTitle(1~3的JSONObject)转化为DateTitle对象
-                for(int i=1;i<4;i++)
-                    dateTitleList = gson.fromJson(userArray.get(i).toString(),new TypeToken<ArrayList<DateTitle>>(){}.getType());
-                dateTitleList.get(1).setIconId(R.drawable.today);
-                dateTitleList.get(2).setIconId(R.drawable.tomarrow);
-                dateTitleList.get(3).setIconId(R.drawable.plan);
+                for(int i=1;i<4;i++){
+                    DateTitle dateTitle = new DateTitle();
+                    dateTitle = gson.fromJson(userArray.get(i).toString(),DateTitle.class);
+                    dateTitleList.add(dateTitle);
+                }
+                dateTitleList.get(0).setIconId(R.drawable.today);
+                dateTitleList.get(1).setIconId(R.drawable.tomarrow);
+                dateTitleList.get(2).setIconId(R.drawable.coming);
                 //将JSONArray中的taskList转换为TaskList对象
-                for(int i=4;i<userArray.size();i++)
-                    taskListList = gson.fromJson(userArray.get(i).toString(),new TypeToken<ArrayList<TaskList>>(){}.getType());
+                for(int i=4;i<userArray.size();i++){
+                    TaskList taskList = new TaskList();
+                    taskList = gson.fromJson(userArray.get(i).toString(),TaskList.class);
+                    taskListList.add(taskList);
+                }
                 Message message = new Message();
                 userHandler.sendMessage(message);
 
+            }
+        });
+
+        //为用户头像以及用户名和用户个性签名绑定点击事件监听器
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到设置页面
+            }
+        });
+        tvUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到设置页面
+            }
+        });
+        tvUserSignature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到设置页面
             }
         });
 
@@ -122,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         rlCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //跳转到创建清单页面
             }
         });
 
