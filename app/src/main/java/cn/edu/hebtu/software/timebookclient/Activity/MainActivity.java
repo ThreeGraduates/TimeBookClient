@@ -1,8 +1,10 @@
 package cn.edu.hebtu.software.timebookclient.Activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
         Long id = sharedPreferences.getLong("userId",0);
-        Integer userId = id.intValue();
+        final Integer userId = id.intValue();
 
         //开启异步请求获取任务清单数据
         Request request = new Request.Builder()
@@ -88,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("MainActivity","网络响应失败");
+                Message message = new Message();
+                message.what = -1;
+                userHandler.sendMessage(message);
             }
 
             @Override
@@ -150,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转到创建清单页面
+                Intent intent = new Intent(MainActivity.this,TasklistActivity.class);
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -159,7 +169,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
+            if(msg.what == -1){
+                //网络响应失败
+                DateTitle today = new DateTitle(R.drawable.today,"今天",0,0);
+                DateTitle tomorrow = new DateTitle(R.drawable.tomarrow,"明天",0,0);
+                DateTitle coming = new DateTitle(R.drawable.coming,"即将到来",0,0);
+                dateTitleList.add(today);
+                dateTitleList.add(tomorrow);
+                dateTitleList.add(coming);
+            }
             //填充用户的信息
             RequestOptions options = new RequestOptions().circleCrop();
             Glide.with(MainActivity.this)
@@ -177,12 +195,14 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //为各个子项绑定点击事件监听
                     Log.e("MainActivity","lvDateTitles:点击各个子项");
+
                 }
             });
 
             //初始化TaskListAdpater 并绑定适配器
             taskListAdapter = new TaskListAdapter(taskListList,MainActivity.this,R.layout.tasklist_item_layout);
             lvTaskList.setAdapter(taskListAdapter);
+            taskListAdapter.notifyDataSetChanged();
             lvTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

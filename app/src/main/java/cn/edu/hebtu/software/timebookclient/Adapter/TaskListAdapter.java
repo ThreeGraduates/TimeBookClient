@@ -51,65 +51,67 @@ public class TaskListAdapter extends BaseAdapter {
             viewHolder.tvTime = convertView.findViewById(R.id.tv_time);
             viewHolder.tvCount = convertView.findViewById(R.id.tv_count);
             convertView.setTag(viewHolder);
-        }else{
+        }
+        else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         TaskList taskList = taskLists.get(position);
+
         //设置清单的图标颜色
-        switch (taskList.getColor()){
+        switch (taskList.getColorId()){
             case R.color.color1:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color1));
+                viewHolder.ivColor.setImageResource(R.color.color1);
                 break;
             case R.color.color2:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color2));
+                viewHolder.ivColor.setImageResource(R.color.color2);
                 break;
             case R.color.color3:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color3));
+                viewHolder.ivColor.setImageResource(R.color.color3);
                 break;
             case R.color.color4:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color4));
+                viewHolder.ivColor.setImageResource(R.color.color4);
                 break;
             case R.color.color5:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color5));
+                viewHolder.ivColor.setImageResource(R.color.color5);
                 break;
             case R.color.color6:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color6));
+                viewHolder.ivColor.setImageResource(R.color.color6);
                 break;
             case R.color.color7:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color7));
+                viewHolder.ivColor.setImageResource(R.color.color7);
                 break;
             case R.color.color8:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color8));
+                viewHolder.ivColor.setImageResource(R.color.color8);
                 break;
             case R.color.color9:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color9));
+                viewHolder.ivColor.setImageResource(R.color.color9);
                 break;
             case R.color.color10:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color10));
+                viewHolder.ivColor.setImageResource(R.color.color10);
                 break;
             case R.color.color11:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color11));
+                viewHolder.ivColor.setImageResource(R.color.color11);
                 break;
             case R.color.color12:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color12));
+                viewHolder.ivColor.setImageResource(R.color.color12);
                 break;
             case R.color.color13:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color13));
+                viewHolder.ivColor.setImageResource(R.color.color13);
                 break;
             case R.color.color14:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color14));
+                viewHolder.ivColor.setImageResource(R.color.color14);
                 break;
             case R.color.color15:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color15));
+                viewHolder.ivColor.setImageResource(R.color.color15);
                 break;
             case R.color.color16:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color16));
+                viewHolder.ivColor.setImageResource(R.color.color16);
                 break;
             case R.color.color17:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color17));
+                viewHolder.ivColor.setImageResource(R.color.color17);
                 break;
             case R.color.color18:
-                viewHolder.ivColor.setBackgroundColor(context.getResources().getColor(R.color.color18));
+                viewHolder.ivColor.setImageResource(R.color.color18);
                 break;
 
         }

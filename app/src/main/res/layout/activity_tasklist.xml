@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGray"
+    tools:context=".Activity.TasklistActivity">
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_back"
+            android:background="@drawable/back"
+            android:layout_margin="15dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <TextView
+            android:text="创建清单"
+            android:textSize="22sp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/inkGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_finish"
+            android:text="完成"
+            android:textSize="20sp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/FontGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_create"
+        android:layout_below="@id/title"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_color"
+            android:background="@color/color1"
+            android:layout_margin="20dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+        <EditText
+            android:id="@+id/et_name"
+            android:hint="新清单名称"
+            android:textSize="20sp"
+            android:textColorHint="@color/FontGray"
+            android:textColor="@color/inkGray"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gv_colorList"
+        android:layout_below="@id/rl_create"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:numColumns="6"
+        android:background="@android:color/white"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

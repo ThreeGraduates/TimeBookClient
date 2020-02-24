@@ -1,9 +1,10 @@
 package cn.edu.hebtu.software.timebookclient.Bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class TaskList {
+public class TaskList implements Serializable {
 
     private Long id;
     private String title;
@@ -12,20 +13,20 @@ public class TaskList {
     private int sumTime;
     private int taskCount;
     private List<TaskList> taskLists;//任务清单中包含的各种任务
-    private User user;//创建任务清单的用户
+    private int userId;//创建任务清单的用户
 
     public TaskList() {
     }
 
-    public TaskList(Long id, String title, Date createTime, int color, int sumTime, int taskCount, List<TaskList> taskLists, User user) {
+    public TaskList(Long id, String title, Date createTime, int colorId, int sumTime, int taskCount, List<TaskList> taskLists, int userId) {
         this.id = id;
         this.title = title;
         this.createTime = createTime;
-        this.colorId = color;
+        this.colorId = colorId;
         this.sumTime = sumTime;
         this.taskCount = taskCount;
         this.taskLists = taskLists;
-        this.user = user;
+        this.userId = userId;
     }
 
     public Long getId() {
@@ -60,20 +61,20 @@ public class TaskList {
         this.taskLists = taskLists;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public int getColor() {
+    public int getColorId() {
         return colorId;
     }
 
-    public void setColor(int color) {
-        this.colorId = color;
+    public void setColorId(int colorId) {
+        this.colorId = colorId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getSumTime() {
@@ -102,7 +103,7 @@ public class TaskList {
                 ", sumTime=" + sumTime +
                 ", taskCount=" + taskCount +
                 ", taskLists=" + taskLists +
-                ", user=" + user +
+                ", userId=" + userId +
                 '}';
     }
 }

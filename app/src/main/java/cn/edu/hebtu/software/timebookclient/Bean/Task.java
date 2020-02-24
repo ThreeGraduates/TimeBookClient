@@ -11,27 +11,31 @@ public class Task {
     private Integer flag;      //0:未开始  1:已完成  2:中途放弃
     private Integer priority;  //任务优先级
     private Date createDate;   //任务创建日期
+    private Date expireDate; //任务截止日期
     private Timestamp startDateTime;  //任务开始时间
-    private Timestamp expireDateTime; //任务到期时间
+   private Timestamp completeDateTime;//任务完成时间
     private String repeat;    //重复次数
     private String remark;    //备注
-    private User user;//创建任务的用户
+    private Long userId;//创建任务的用户
+    private Long checkListId; //所属任务的任务清单
 
     public Task() {
     }
 
-    public Task(Long id, String title, Integer count, Integer flag, Integer priority, Date createDate, Timestamp startDateTime, Timestamp expireDateTime, String repeat, String remark, User user) {
+    public Task(Long id, String title, Integer count, Integer flag, Integer priority, Date createDate, Date expireDate, Timestamp startDateTime, Timestamp completeDateTime, String repeat, String remark, Long userId, Long checkListId) {
         this.id = id;
         this.title = title;
         this.count = count;
         this.flag = flag;
         this.priority = priority;
         this.createDate = createDate;
+        this.expireDate = expireDate;
         this.startDateTime = startDateTime;
-        this.expireDateTime = expireDateTime;
+        this.completeDateTime = completeDateTime;
         this.repeat = repeat;
         this.remark = remark;
-        this.user = user;
+        this.userId = userId;
+        this.checkListId = checkListId;
     }
 
     public Long getId() {
@@ -82,6 +86,14 @@ public class Task {
         this.createDate = createDate;
     }
 
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
     public Timestamp getStartDateTime() {
         return startDateTime;
     }
@@ -90,12 +102,12 @@ public class Task {
         this.startDateTime = startDateTime;
     }
 
-    public Timestamp getExpireDateTime() {
-        return expireDateTime;
+    public Timestamp getCompleteDateTime() {
+        return completeDateTime;
     }
 
-    public void setExpireDateTime(Timestamp expireDateTime) {
-        this.expireDateTime = expireDateTime;
+    public void setCompleteDateTime(Timestamp completeDateTime) {
+        this.completeDateTime = completeDateTime;
     }
 
     public String getRepeat() {
@@ -114,12 +126,20 @@ public class Task {
         this.remark = remark;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getCheckListId() {
+        return checkListId;
+    }
+
+    public void setCheckListId(Long checkListId) {
+        this.checkListId = checkListId;
     }
 
     @Override
@@ -131,11 +151,13 @@ public class Task {
                 ", flag=" + flag +
                 ", priority=" + priority +
                 ", createDate=" + createDate +
+                ", expireDate=" + expireDate +
                 ", startDateTime=" + startDateTime +
-                ", expireDateTime=" + expireDateTime +
+                ", completeDateTime=" + completeDateTime +
                 ", repeat='" + repeat + '\'' +
                 ", remark='" + remark + '\'' +
-                ", user=" + user +
+                ", userId=" + userId +
+                ", checkListId=" + checkListId +
                 '}';
     }
 }
