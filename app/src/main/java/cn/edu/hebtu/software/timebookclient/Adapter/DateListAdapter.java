@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.edu.hebtu.software.timebookclient.R;
-import cn.edu.hebtu.software.timebookclient.DateTitle;
+import cn.edu.hebtu.software.timebookclient.Util.DateTitle;
 
 public class DateListAdapter extends BaseAdapter {
 

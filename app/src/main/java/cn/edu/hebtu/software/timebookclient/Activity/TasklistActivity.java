@@ -28,9 +28,8 @@ import java.util.Date;
 import java.util.List;
 
 import cn.edu.hebtu.software.timebookclient.Adapter.ColorListAdapter;
-import cn.edu.hebtu.software.timebookclient.Bean.Task;
 import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
-import cn.edu.hebtu.software.timebookclient.ColorItem;
+import cn.edu.hebtu.software.timebookclient.Util.ColorItem;
 import cn.edu.hebtu.software.timebookclient.R;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,7 +38,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class TasklistActivity extends AppCompatActivity {
 

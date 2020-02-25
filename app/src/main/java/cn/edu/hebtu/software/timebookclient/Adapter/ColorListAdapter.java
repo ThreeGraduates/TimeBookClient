@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import java.util.List;
 
-import cn.edu.hebtu.software.timebookclient.ColorItem;
+import cn.edu.hebtu.software.timebookclient.Util.ColorItem;
 import cn.edu.hebtu.software.timebookclient.R;
 
 public class ColorListAdapter extends BaseAdapter {
