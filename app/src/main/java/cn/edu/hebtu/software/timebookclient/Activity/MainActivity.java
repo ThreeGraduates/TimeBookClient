@@ -132,18 +132,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转到设置页面
+                Intent intent = new Intent(MainActivity.this,SetupActivity.class);
+                Log.e("main-userId:",userId+"");
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //跳转到设置页面
+                Intent intent = new Intent(MainActivity.this,SetupActivity.class);
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
         tvUserSignature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //跳转到设置页面
+                Intent intent = new Intent(MainActivity.this,SetupActivity.class);
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
 
