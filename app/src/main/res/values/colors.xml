@@ -26,4 +26,8 @@
     <color name="color16">#ED6B66</color>
     <color name="color17">#B6B4B7</color>
     <color name="color18">#B79A8F</color>
+
+    <color name="gray">#F4F4F4</color>
+    <color name="deepGray">#CCCCCC</color>
+    <color name="lightBlack">#757575</color>
 </resources>

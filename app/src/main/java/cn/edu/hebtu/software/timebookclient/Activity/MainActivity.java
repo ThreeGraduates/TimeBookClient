@@ -2,10 +2,10 @@ package cn.edu.hebtu.software.timebookclient.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,8 +33,8 @@ import cn.edu.hebtu.software.timebookclient.Adapter.DateListAdapter;
 import cn.edu.hebtu.software.timebookclient.Adapter.TaskListAdapter;
 import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
 import cn.edu.hebtu.software.timebookclient.Bean.User;
-import cn.edu.hebtu.software.timebookclient.Util.DateTitle;
 import cn.edu.hebtu.software.timebookclient.R;
+import cn.edu.hebtu.software.timebookclient.Util.DateTitle;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -132,18 +132,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转到设置页面
+                Intent intent = new Intent(MainActivity.this,SetupActivity.class);
+                Log.e("main-userId:",userId+"");
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //跳转到设置页面
+                Intent intent = new Intent(MainActivity.this,SetupActivity.class);
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
         tvUserSignature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //跳转到设置页面
+                Intent intent = new Intent(MainActivity.this,SetupActivity.class);
+                intent.putExtra("currentUserId",userId);
+                startActivity(intent);
+                finish();
             }
         });
 
