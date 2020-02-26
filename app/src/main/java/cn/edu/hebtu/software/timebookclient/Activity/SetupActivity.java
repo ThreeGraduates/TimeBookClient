@@ -155,7 +155,6 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
                     .dontAnimate()
                     .load(path+user.getImage()+"?key=" + Math.random())
                     .into(avatar);
-            Log.e("user",user.toString());
         }
     }
 
@@ -196,14 +195,16 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
     class NumberPickerListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
+            int defaultValue=25;
             switch (v.getId()){
                 case R.id.left_arrow1:
                     numberPicker=findViewById(R.id.numPicker1);
-                    if(numberPicker.getVisibility()==View.VISIBLE){
+                    if(numberPicker.getVisibility()==View.VISIBLE){ //原来可见，变为不可见
                         user.setTomatoTime(numberPicker.getValue());
                         tvNum1.setText(numberPicker.getValue()+"");
                         arrow1.setImageResource(R.drawable.left_arrow);
-                    }else{
+                    }else{   //原来不可见，变为可见
+                        defaultValue=user.getTomatoTime();
                         arrow1.setImageResource(R.drawable.down_arrow);
                     }
                     break;
@@ -214,6 +215,7 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
                         tvNum2.setText(numberPicker.getValue()+"");
                         arrow2.setImageResource(R.drawable.left_arrow);
                     }else{
+                        defaultValue=user.getShortBreak();
                         arrow2.setImageResource(R.drawable.down_arrow);
                     }
                     break;
@@ -224,6 +226,7 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
                         tvNum3.setText(numberPicker.getValue()+"");
                         arrow3.setImageResource(R.drawable.left_arrow);
                     }else{
+                        defaultValue=user.getLongBreak();
                         arrow3.setImageResource(R.drawable.down_arrow);
                     }
                     break;
@@ -234,6 +237,7 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
                         tvNum4.setText(numberPicker.getValue()+"");
                         arrow4.setImageResource(R.drawable.left_arrow);
                     }else{
+                        defaultValue=user.getLongRestInterval();
                         arrow4.setImageResource(R.drawable.down_arrow);
                     }
                     break;
@@ -246,7 +250,7 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
             }else{
                 NumberPickerUtils.setNumberPickerTextColor(numberPicker, R.color.lightBlack);
                 NumberPickerUtils.setNumberPickerDividerColor(numberPicker,R.color.lightBlack);
-                init();
+                init(defaultValue);
                 numberPicker.setVisibility(View.VISIBLE);
             }
 
@@ -254,13 +258,13 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
     }
 
     //初始化数字选择器
-    private void init() {
+    private void init(int defaultValue) {
         numberPicker.setFormatter(this);
         numberPicker.setOnValueChangedListener(this);
         numberPicker.setOnScrollListener(this);
         numberPicker.setMaxValue(120);
         numberPicker.setMinValue(0);
-        numberPicker.setValue(25);
+        numberPicker.setValue(defaultValue);
     }
 
     @Override

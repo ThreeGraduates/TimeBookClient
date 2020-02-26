@@ -125,4 +125,21 @@ public class User implements Serializable {
     public void setSignature(String signature) {
         this.signature = signature;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", image='" + image + '\'' +
+                ", email='" + email + '\'' +
+                ", tomatoTime=" + tomatoTime +
+                ", shortBreak=" + shortBreak +
+                ", longBreak=" + longBreak +
+                ", longRestInterval=" + longRestInterval +
+                ", createTime=" + createTime +
+                ", signature='" + signature + '\'' +
+                '}';
+    }
 }

@@ -49,9 +49,11 @@ public class PersonalCenterActivity extends AppCompatActivity {
     private ImageView returnImg;
     private TextView tvName;
     private TextView tvEmail;
+    private TextView tvSignature;
     private LinearLayout llAvatar;
     private LinearLayout llName;
     private LinearLayout llPassword;
+    private LinearLayout llSignature;
     private OkHttpClient okHttpClient;
     private String path;
 
@@ -70,6 +72,7 @@ public class PersonalCenterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_personal_center);
         Intent intent=getIntent();
         user= (User) intent.getSerializableExtra("user");
+        Log.e("personal",user.toString());
         path=getResources().getString(R.string.sever_path);
         GsonBuilder builder=new GsonBuilder();
         gson=builder.serializeNulls().create();
@@ -79,12 +82,17 @@ public class PersonalCenterActivity extends AppCompatActivity {
         returnImg=findViewById(R.id.returnImg);
         tvName=findViewById(R.id.tv_name);
         tvEmail=findViewById(R.id.tv_email);
+        tvSignature=findViewById(R.id.tv_signature);
         llAvatar=findViewById(R.id.ll_avatar);
         llName=findViewById(R.id.ll_name);
         llPassword=findViewById(R.id.ll_password);
         llRoot=findViewById(R.id.root);
+        llSignature=findViewById(R.id.ll_signature);
+
         tvName.setText(user.getUsername());
         tvEmail.setText(user.getEmail());
+        tvSignature.setText(user.getSignature());
+
         RequestOptions options = new RequestOptions().circleCrop();
         Glide.with(PersonalCenterActivity.this)
                 .load(path+user.getImage()+"?key=" + Math.random())
@@ -114,6 +122,13 @@ public class PersonalCenterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showAlterUsernamePopupWindow();
+            }
+        });
+        //修改个性签名
+        llSignature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlterSignaturePopupWindow();
             }
         });
         //修改密码
@@ -273,6 +288,46 @@ public class PersonalCenterActivity extends AppCompatActivity {
     }
 
     /**
+     *  展示修改个性签名pop
+     */
+    private void showAlterSignaturePopupWindow(){
+        popupWindow=new PopupWindow(this);
+        popupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow.setFocusable(true);
+        View view=getLayoutInflater().inflate(R.layout.popupwindow_signature,null);
+        TextView deter=view.findViewById(R.id.tv_deter);
+        final EditText editText=view.findViewById(R.id.et_signature);
+        deter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user.setSignature(editText.getText().toString());
+                AlterUserTask alterUsernameTask=new AlterUserTask("signature");
+                alterUsernameTask.execute();
+                popupWindow.dismiss();
+            }
+        });
+
+        TextView cancel=view.findViewById(R.id.tv_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.setContentView(view);
+        backgroundAlpha(0.9f);
+        //添加pop窗口关闭事件
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
+        popupWindow.showAtLocation(llRoot, Gravity.CENTER,0,0);
+    }
+
+    /**
      *  展示上传头像pop
      */
     private void showUploadAvatarPopupWindow(){
@@ -406,7 +461,7 @@ public class PersonalCenterActivity extends AppCompatActivity {
     }
 
     /**
-     *  修改用户名
+     *  修改用户
      */
     class AlterUserTask extends AsyncTask{
         private String flag; //username 或 password
@@ -442,6 +497,7 @@ public class PersonalCenterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             tvName.setText(user.getUsername());
+            tvSignature.setText(user.getSignature());
         }
     }
 }
