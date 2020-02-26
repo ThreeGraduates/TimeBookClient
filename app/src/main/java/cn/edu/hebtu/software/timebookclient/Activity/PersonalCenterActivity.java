@@ -7,11 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -326,13 +326,13 @@ public class PersonalCenterActivity extends AppCompatActivity {
                     Uri imageFileUri = Uri.fromFile(temp);
                     Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     //告诉相机拍摄完毕输出图片到指定的Uri
-                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
                     startActivityForResult(intent,TAKE_RESULT_CODE);
                     break;
                 case R.id.btnAlbum://手机相册选择图片上传
                     Intent albumIntent=new Intent(
                             Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(albumIntent,ALBUM_RESULT_CODE);
                     break;
             }
