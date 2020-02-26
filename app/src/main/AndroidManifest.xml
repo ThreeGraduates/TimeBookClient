@@ -30,7 +30,8 @@
         <activity android:name=".Activity.TodayTaskActivity" />
         <activity android:name=".Activity.SetupActivity" />
         <activity android:name=".Activity.PersonalCenterActivity" />
-        <activity android:name=".Activity.TaskListManagerActivity"></activity>
+        <activity android:name=".Activity.TaskListManagerActivity" />
+        <activity android:name=".Activity.ChartActivity"></activity>
     </application>
 
 </manifest>
