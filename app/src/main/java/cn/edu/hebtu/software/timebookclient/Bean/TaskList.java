@@ -12,13 +12,13 @@ public class TaskList implements Serializable {
     private int colorId;
     private int sumTime;
     private int taskCount;
-    private List<TaskList> taskLists;//任务清单中包含的各种任务
+    private List<Task> taskLists;//任务清单中包含的各种任务
     private int userId;//创建任务清单的用户
 
     public TaskList() {
     }
 
-    public TaskList(Long id, String title, Date createTime, int colorId, int sumTime, int taskCount, List<TaskList> taskLists, int userId) {
+    public TaskList(Long id, String title, Date createTime, int colorId, int sumTime, int taskCount, List<Task> taskLists, int userId) {
         this.id = id;
         this.title = title;
         this.createTime = createTime;
@@ -53,11 +53,11 @@ public class TaskList implements Serializable {
         this.createTime = createTime;
     }
 
-    public List<TaskList> getTaskLists() {
+    public List<Task> getTaskLists() {
         return taskLists;
     }
 
-    public void setTaskLists(List<TaskList> taskLists) {
+    public void setTaskLists(List<Task> taskLists) {
         this.taskLists = taskLists;
     }
 

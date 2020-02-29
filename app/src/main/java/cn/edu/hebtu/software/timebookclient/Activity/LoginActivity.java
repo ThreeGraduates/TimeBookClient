@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         FindView();
 
         //获取服务前端的地址
-        serverPath = getResources().getString(R.string.sever_path);
+        serverPath = getResources().getString(R.string.server_path);
 
         //点击登录
         btnLogin.setOnClickListener(new View.OnClickListener() {

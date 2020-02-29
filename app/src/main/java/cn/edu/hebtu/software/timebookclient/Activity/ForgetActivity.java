@@ -41,7 +41,7 @@ public class ForgetActivity extends AppCompatActivity {
         //获取布局控件
         findView();
         //获取服务器端地址
-        serverPath = getResources().getString(R.string.sever_path);
+        serverPath = getResources().getString(R.string.server_path);
 
         //为返回按钮绑定事件监听器
         btnBack.setOnClickListener(new View.OnClickListener() {

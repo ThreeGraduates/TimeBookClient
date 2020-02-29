@@ -18,11 +18,14 @@ public class Task {
     private String remark;    //备注
     private Long userId;//创建任务的用户
     private Long checkListId; //所属任务的任务清单
+    private String list_title;
+    private Integer list_colorId;
+    private int useTime; //任务已用过的时间
 
     public Task() {
     }
 
-    public Task(Long id, String title, Integer count, Integer flag, Integer priority, Date createDate, Date expireDate, Timestamp startDateTime, Timestamp completeDateTime, String repeat, String remark, Long userId, Long checkListId) {
+    public Task(Long id, String title, Integer count, Integer flag, Integer priority, Date createDate, Date expireDate, Timestamp startDateTime, Timestamp completeDateTime, String repeat, String remark, Long userId, Long checkListId, String list_title, Integer list_colorId, int usedTime) {
         this.id = id;
         this.title = title;
         this.count = count;
@@ -36,6 +39,9 @@ public class Task {
         this.remark = remark;
         this.userId = userId;
         this.checkListId = checkListId;
+        this.list_title = list_title;
+        this.list_colorId = list_colorId;
+        this.useTime = usedTime;
     }
 
     public Long getId() {
@@ -142,6 +148,30 @@ public class Task {
         this.checkListId = checkListId;
     }
 
+    public String getList_title() {
+        return list_title;
+    }
+
+    public void setList_title(String list_title) {
+        this.list_title = list_title;
+    }
+
+    public Integer getList_colorId() {
+        return list_colorId;
+    }
+
+    public void setList_colorId(Integer list_colorId) {
+        this.list_colorId = list_colorId;
+    }
+
+    public int getUseTime() {
+        return useTime;
+    }
+
+    public void setUseTime(int usedTime) {
+        this.useTime = usedTime;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -158,6 +188,9 @@ public class Task {
                 ", remark='" + remark + '\'' +
                 ", userId=" + userId +
                 ", checkListId=" + checkListId +
+                ", list_title='" + list_title + '\'' +
+                ", list_colorId=" + list_colorId +
+                ", useTime=" + useTime +
                 '}';
     }
 }

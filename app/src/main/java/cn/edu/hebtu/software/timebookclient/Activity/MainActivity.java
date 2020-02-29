@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private DateListAdapter dateListAdapter;
     private TaskListAdapter taskListAdapter;
     private UserHandler userHandler = new UserHandler();
+    private Long currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +73,12 @@ public class MainActivity extends AppCompatActivity {
         lvTaskList = findViewById(R.id.lv_tasklist);
         rlCreate = findViewById(R.id.rl_create);
 
-        serverPath = getResources().getString(R.string.sever_path);
+        serverPath = getResources().getString(R.string.server_path);
 
         sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
-        Long id = sharedPreferences.getLong("userId",0);
-        final Integer userId = id.intValue();
+        currentUserId = sharedPreferences.getLong("userId",0);
+
+        final Integer userId = currentUserId.intValue();
 
         //开启异步请求获取任务清单数据
         Request request = new Request.Builder()
@@ -201,13 +203,18 @@ public class MainActivity extends AppCompatActivity {
 
             //初始化 DateListAdapter 并绑定适配器
             dateListAdapter = new DateListAdapter(dateTitleList,MainActivity.this,R.layout.datelist_item_layout);
+
             lvDateTitles.setAdapter(dateListAdapter);
             lvDateTitles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //为各个子项绑定点击事件监听
                     Log.e("MainActivity","lvDateTitles:点击各个子项");
-
+                    Intent taskIntent = new Intent(MainActivity.this,CreateTaskActivity.class);
+                    currentUser.setId(currentUserId);
+                    taskIntent.putExtra("currentUser",currentUser);
+                    taskIntent.putExtra("flag",(int)id);
+                    startActivity(taskIntent);
                 }
             });
 
@@ -219,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //为各个子项绑定点击事件监听
-                    Log.e("MainActivity","lvTaskList:点击各个子项");
+
                 }
             });
         }

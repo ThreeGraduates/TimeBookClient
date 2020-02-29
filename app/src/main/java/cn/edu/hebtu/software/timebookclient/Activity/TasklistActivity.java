@@ -63,7 +63,7 @@ public class TasklistActivity extends AppCompatActivity {
         //获取当前用户的id
         currentUserId = getIntent().getIntExtra("currentUserId",0);
         //获取服务器端连接
-        serverPath = getResources().getString(R.string.sever_path);
+        serverPath = getResources().getString(R.string.server_path);
 
         //返回按钮绑定点击事件监听器
         btnBack.setOnClickListener(new View.OnClickListener() {

@@ -66,7 +66,7 @@ public class SetupActivity extends AppCompatActivity implements NumberPicker.OnV
         userId = id.intValue();
         Log.e("setup-userId",userId+"");
 
-        path=getResources().getString(R.string.sever_path);
+        path=getResources().getString(R.string.server_path);
 
         llUser=findViewById(R.id.ll_user);
         llListManager=findViewById(R.id.list_manager);
