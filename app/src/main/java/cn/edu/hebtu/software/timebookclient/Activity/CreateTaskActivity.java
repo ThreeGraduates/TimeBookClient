@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +41,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
 
 import cn.edu.hebtu.software.timebookclient.Adapter.CTTaskListAdapter;
 import cn.edu.hebtu.software.timebookclient.Adapter.FinishListAdapter;
@@ -102,6 +98,8 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
     private CTTaskListAdapter taskListAdapter;
 
     private int usedTime = 0;//表示今日已使用的时间为 0
+    private int index = 0;
+    private int flag = 0;
 
     private User currentUser = new User();
     @Override
@@ -115,7 +113,7 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
         Intent mainIntent = getIntent();
         currentUser = (User) mainIntent.getSerializableExtra("currentUser");
         taskLists = (ArrayList<TaskList>) mainIntent.getSerializableExtra("taskList");
-        int flag = mainIntent.getIntExtra("flag",-1);
+        flag = mainIntent.getIntExtra("flag",-1);
         Log.e("CreateTaskActivity","tomatoTime-"+currentUser.getTomatoTime());
         switch (flag){
             case 0:
@@ -343,19 +341,34 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                     task = new Task();
                     task.setTitle(taskTitle);
                     task.setCount(taskTomatoCount);
-                    task.setCreateDate(new Date());
+                    //判断是从今天 明天 还是即将到来进入
+                    Date createDate;
+                    Calendar rightNow = Calendar.getInstance();
+                    switch (flag){
+                        case 1:
+                            //从明天处进入
+                            rightNow.add(Calendar.DAY_OF_YEAR,1);
+                            createDate = rightNow.getTime();
+                            break;
+                        case 2:
+                            //从即将到来进入
+                            rightNow.add(Calendar.DAY_OF_YEAR,7);
+                            createDate = rightNow.getTime();
+                            break;
+                            default:
+                                //从今天或者任务清单进入
+                                createDate = new Date();
+                                break;
+                    }
+                    task.setCreateDate(createDate);
                     task.setExpireDate(date);
                     task.setPriority(0);
                     task.setFlag(0);
                     task.setUserId(currentUser.getId());
                     task.setList_title(listName);
                     task.setUseTime(0);
-                    for(TaskList item : taskLists){
-                        if(item.getTitle().equals(listName)){
-                            task.setCheckListId(item.getId());
-                            task.setList_colorId(item.getColorId());
-                        }
-                    }
+                    task.setCheckListId(taskLists.get(index).getId());
+                    task.setList_colorId(taskLists.get(index).getColorId());
                     unfinishTaskList.add(task);
                     Collections.sort(unfinishTaskList, new Comparator<Task>() {
                         @Override
@@ -365,6 +378,7 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                         }
                     });
                     unfinishListAdapter.notifyDataSetChanged();
+
                     //对总览框做出相应的更改
                     tvUnfinishCount.setText(unfinishTaskList.size()+"");
                     int minute = 0;
@@ -374,12 +388,13 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                     tvPlanTime.setText(minute+"");
 
 
-
                     createTaskWindow.dismiss();
                     Gson gson = new GsonBuilder()
                             .serializeNulls()
+                            .setDateFormat("yyyy-MM-dd hh:mm:ss")
                             .create();
                     String taskJsonStr = gson.toJson(task);
+                    Log.e("CreateTaskActivity",taskJsonStr);
                     MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
                     RequestBody requestBody = RequestBody.create(mediaType,taskJsonStr);
                     Request request = new Request.Builder()
@@ -397,9 +412,6 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             //do nothing
-                            InputStream inputStream = response.body().byteStream();
-                            String result = new BufferedReader(new InputStreamReader(inputStream)).readLine();
-                            Log.e("CreateTaskActivity",result);
                         }
                     });
                 }
@@ -450,6 +462,7 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                 TaskList taskList = taskLists.get(position);
                 tvListTitle.setText(taskList.getTitle());
                 lvTaskList.setVisibility(View.GONE);
+                index = position;
             }
         });
         //点击 选择任务清单
