@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/create_task_window_style"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="400dp"
+        android:layout_height="500dp">
+
+        <RelativeLayout
+            android:id="@+id/ll_window_title"
+            android:background="@drawable/create_task_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <Button
+                android:id="@+id/btn_close"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/close"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <TextView
+                android:text="添加任务"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_finish"
+                android:text="完成"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/ll_task_title"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/ll_window_title"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:background="@drawable/task"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+            <EditText
+                android:id="@+id/et_task_title"
+                android:hint="请输入任务名"
+                android:textSize="18sp"
+                android:textColor="@color/inkGray"
+                android:textColorHint="@color/deepGray"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_settings"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/ll_task_title"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/clock_icon"
+                    android:background="@drawable/clock"
+                    android:layout_margin="10dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
+                <TextView
+                    android:layout_toRightOf="@id/clock_icon"
+                    android:layout_centerVertical="true"
+                    android:text="番茄数"
+                    android:textColor="@color/inkGray"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_tomato_count"
+                    android:layout_toLeftOf="@id/iv_tomato"
+                    android:layout_marginRight="2dp"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/warmRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/iv_tomato"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/finish_tomato"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp" />
+            </RelativeLayout>
+            <NumberPicker
+                android:id="@+id/select_count"
+                android:visibility="gone"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:background="@color/lightGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/date_icon"
+                    android:background="@drawable/date"
+                    android:layout_margin="10dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
+                <TextView
+                    android:layout_toRightOf="@id/date_icon"
+                    android:text="到期日"
+                    android:textSize="18sp"
+                    android:textColor="@color/inkGray"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/expire_date"
+                    android:text="今天"
+                    android:textColor="@color/warmRed"
+                    android:textSize="16sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <DatePicker
+                android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar"
+                android:id="@+id/pick_expire_date"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:startYear="2020"
+                android:background="@color/lightGray"
+                android:calendarTextColor="@color/inkGray"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+            
+            <RelativeLayout
+                android:id="@+id/rl_setting_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/list_icon"
+                    android:background="@drawable/list"
+                    android:layout_margin="10dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
+                <TextView
+                    android:text="清单"
+                    android:textColor="@color/inkGray"
+                    android:textSize="18sp"
+                    android:layout_toRightOf="@id/list_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/list_name"
+                    android:textSize="16sp"
+                    android:textColor="@color/warmRed"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <ListView
+                android:visibility="gone"
+                android:background="@color/lightGray"
+                android:id="@+id/lv_taskList"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
