@@ -1,17 +1,28 @@
 package cn.edu.hebtu.software.timebookclient.Activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,22 +34,37 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
+import cn.edu.hebtu.software.timebookclient.Adapter.CTTaskListAdapter;
 import cn.edu.hebtu.software.timebookclient.Adapter.FinishListAdapter;
 import cn.edu.hebtu.software.timebookclient.Adapter.UnfinishListAdapter;
 import cn.edu.hebtu.software.timebookclient.Bean.Task;
+import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
 import cn.edu.hebtu.software.timebookclient.Bean.User;
 import cn.edu.hebtu.software.timebookclient.R;
+import cn.edu.hebtu.software.timebookclient.Util.NumberPickerUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class CreateTaskActivity extends AppCompatActivity {
+public class CreateTaskActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener, NumberPicker.Formatter, NumberPicker.OnScrollListener,DatePicker.OnDateChangedListener {
 
+    private RelativeLayout rlRoot;
     private TextView tvDate;
     private Button btnBack;
     private TextView tvPlanTime;
@@ -58,6 +84,22 @@ public class CreateTaskActivity extends AppCompatActivity {
     private FinishListAdapter finishListAdapter;
     private String serverPath;
     private CreateHandler createHandler = new CreateHandler();
+    //createTaskWindow的布局中的各个控件元素
+    private PopupWindow createTaskWindow;
+    private Button btnCloseWindow;
+    private TextView tvFinish;
+    private EditText etTaskTitle;
+    private RelativeLayout rlSettingCount;
+    private TextView tomatoCount;
+    private NumberPicker numberPicker;
+    private RelativeLayout rlSettingDate;
+    private TextView expireDate;
+    private DatePicker datePicker;
+    private RelativeLayout rlSettingList;
+    private TextView tvListTitle;
+    private ListView lvTaskList;
+    private ArrayList<TaskList> taskLists = new ArrayList<TaskList>();
+    private CTTaskListAdapter taskListAdapter;
 
     private int usedTime = 0;//表示今日已使用的时间为 0
 
@@ -72,6 +114,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         //获取从MainActivity中传递过来的currentUser
         Intent mainIntent = getIntent();
         currentUser = (User) mainIntent.getSerializableExtra("currentUser");
+        taskLists = (ArrayList<TaskList>) mainIntent.getSerializableExtra("taskList");
         int flag = mainIntent.getIntExtra("flag",-1);
         Log.e("CreateTaskActivity","tomatoTime-"+currentUser.getTomatoTime());
         switch (flag){
@@ -92,6 +135,8 @@ public class CreateTaskActivity extends AppCompatActivity {
                 break;
         }
 
+        taskListAdapter = new CTTaskListAdapter(this,taskLists,R.layout.create_task_tasklist_item_layout);
+
         //为返回按钮 绑定点击事件监听器
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,11 +146,11 @@ public class CreateTaskActivity extends AppCompatActivity {
         });
         //为添加任务框的rl绑定事件监听器
         rlCreateTask.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                //弹出添加任务框
-
-
+                //弹出添加任务框 createTaskWindow弹出
+                showCreateTaskPopupWindow();
             }
         });
         //获取服务器端ip
@@ -113,7 +158,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         //定义Gson
         final Gson gson = new GsonBuilder()
                 .serializeNulls()
-                .setDateFormat("yyyy-MM-dd")
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .create();
         //获得当前SharedPreferences内的id
         Long id = getSharedPreferences("data",MODE_PRIVATE).getLong("userId",0);
@@ -174,6 +219,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     public  void findView(){
+        rlRoot = findViewById(R.id.rl_create_task);
         tvDate = findViewById(R.id.tv_date);
         btnBack = findViewById(R.id.btn_back);
         tvPlanTime = findViewById(R.id.tv_plan_time);
@@ -186,6 +232,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         btnShowFinish = findViewById(R.id.btn_show_finish);
         llSummary = findViewById(R.id.ll_summary);
     }
+
 
     public class CreateHandler extends Handler {
         @Override
@@ -217,5 +264,253 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    //创建任务的popupwindow的获取和相关设置
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void showCreateTaskPopupWindow(){
+        View contentView = LayoutInflater.from(this).inflate(R.layout.popupwindow_create_task,null,false);
+        createTaskWindow = new PopupWindow(this);
+        createTaskWindow.setWidth(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        createTaskWindow.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        createTaskWindow.setContentView(contentView);
+        createTaskWindow.setFocusable(true);
+        createTaskWindow.setOutsideTouchable(true);
+        createTaskWindow.setBackgroundDrawable(getDrawable(R.drawable.create_task_window_style));
+
+        findWindowView(contentView);
+        settingViews();
+        backgroundAlpha(0.7f);
+        createTaskWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+            }
+        });
+        createTaskWindow.showAtLocation(rlRoot,Gravity.CENTER,0,0);
+
+
+    }
+
+    //获取createTaskWindow中的布局控件
+    public void findWindowView(View view){
+        btnCloseWindow = view.findViewById(R.id.btn_close);
+        tvFinish = view.findViewById(R.id.tv_finish);
+        etTaskTitle = view.findViewById(R.id.et_task_title);
+        rlSettingCount = view.findViewById(R.id.rl_setting_count);
+        tomatoCount = view.findViewById(R.id.tv_tomato_count);
+        numberPicker = view.findViewById(R.id.select_count);
+        rlSettingDate = view.findViewById(R.id.rl_setting_date);
+        expireDate = view.findViewById(R.id.expire_date);
+        Date today = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        expireDate.setText(simpleDateFormat.format(today));
+        datePicker = view.findViewById(R.id.pick_expire_date);
+        rlSettingList = view.findViewById(R.id.rl_setting_list);
+        tvListTitle = view.findViewById(R.id.list_name);
+        lvTaskList = view.findViewById(R.id.lv_taskList);
+
+    }
+
+    //为createTaskWindow中布局控件进行设置
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void settingViews(){
+        btnCloseWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击关闭按钮 createTaskWindow消失 并且背景透明度恢复为1
+                createTaskWindow.dismiss();
+            }
+        });
+
+        tvFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Task task;
+                String taskTitle = etTaskTitle.getText().toString();
+                int taskTomatoCount = Integer.parseInt(tomatoCount.getText().toString());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = new Date();
+                    date = simpleDateFormat.parse(expireDate.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String listName =  tvListTitle.getText().toString();
+                if(taskTitle != null && !"".equals(taskTitle) && taskTomatoCount!=0 && date!=null && listName!=null && !"".equals(listName)){
+                    //点击完成 开启异步任务
+                    task = new Task();
+                    task.setTitle(taskTitle);
+                    task.setCount(taskTomatoCount);
+                    task.setCreateDate(new Date());
+                    task.setExpireDate(date);
+                    task.setPriority(0);
+                    task.setFlag(0);
+                    task.setUserId(currentUser.getId());
+                    task.setList_title(listName);
+                    task.setUseTime(0);
+                    for(TaskList item : taskLists){
+                        if(item.getTitle().equals(listName)){
+                            task.setCheckListId(item.getId());
+                            task.setList_colorId(item.getColorId());
+                        }
+                    }
+                    unfinishTaskList.add(task);
+                    Collections.sort(unfinishTaskList, new Comparator<Task>() {
+                        @Override
+                        public int compare(Task o1, Task o2) {
+                            //根据任务的到期时间进行排序
+                            return o1.getExpireDate().compareTo(o2.getExpireDate());
+                        }
+                    });
+                    unfinishListAdapter.notifyDataSetChanged();
+                    //对总览框做出相应的更改
+                    tvUnfinishCount.setText(unfinishTaskList.size()+"");
+                    int minute = 0;
+                    for(Task item : unfinishTaskList){
+                        minute += item.getCount()*currentUser.getTomatoTime();
+                    }
+                    tvPlanTime.setText(minute+"");
+
+
+
+                    createTaskWindow.dismiss();
+                    Gson gson = new GsonBuilder()
+                            .serializeNulls()
+                            .create();
+                    String taskJsonStr = gson.toJson(task);
+                    MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
+                    RequestBody requestBody = RequestBody.create(mediaType,taskJsonStr);
+                    Request request = new Request.Builder()
+                            .url(serverPath+"task/saveTask")
+                            .post(requestBody)
+                            .build();
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Call call = okHttpClient.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.e("CreateTaskActivity","创建任务：网络响应时间过长");
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            //do nothing
+                            InputStream inputStream = response.body().byteStream();
+                            String result = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+                            Log.e("CreateTaskActivity",result);
+                        }
+                    });
+                }
+            }
+        });
+        initPicker(Integer.parseInt(tomatoCount.getText().toString()));
+        NumberPickerUtils.setNumberPickerTextColor(numberPicker, R.color.inkGray);
+        NumberPickerUtils.setNumberPickerDividerColor(numberPicker,R.color.lightBlack);
+        //点击 选择番茄数
+        rlSettingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(numberPicker.getVisibility() == View.VISIBLE){
+                    //日期选择器当前为显示的状态
+                   tomatoCount.setText(numberPicker.getValue()+"");
+                   numberPicker.setVisibility(View.GONE);
+
+                }else
+                    //日期选择器当前为隐藏的状态
+                    numberPicker.setVisibility(View.VISIBLE);
+            }
+        });
+        //点击 选择到期日期
+        Calendar calendar = Calendar.getInstance();
+        int year=calendar.get(Calendar.YEAR);
+        int monthOfYear=calendar.get(Calendar.MONTH);
+        int dayOfMonth=calendar.get(Calendar.DAY_OF_MONTH);
+        datePicker.init(year,monthOfYear,dayOfMonth,this);
+        datePicker.setFocusableInTouchMode(true);
+        rlSettingDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (datePicker.getVisibility() == View.VISIBLE){
+                    //日期选择器显示
+                    int month = datePicker.getMonth()+1;
+                    expireDate.setText(datePicker.getYear()+"-"+month+"-"+datePicker.getDayOfMonth());
+                    datePicker.setVisibility(View.GONE);
+                }else
+                    datePicker.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        lvTaskList.setAdapter(taskListAdapter);
+        lvTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TaskList taskList = taskLists.get(position);
+                tvListTitle.setText(taskList.getTitle());
+                lvTaskList.setVisibility(View.GONE);
+            }
+        });
+        //点击 选择任务清单
+        rlSettingList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lvTaskList.getVisibility() == View.VISIBLE)
+                    lvTaskList.setVisibility(View.GONE);
+                else
+                    lvTaskList.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    //初始化NumberPicker DatePicker
+    public void initPicker(int defaultValue){
+        //初始化NumberPicker
+        numberPicker.setFormatter(this);
+        numberPicker.setOnValueChangedListener(this);
+        numberPicker.setOnScrollListener(this);
+        numberPicker.setMaxValue(120);
+        numberPicker.setMinValue(0);
+        numberPicker.setValue(defaultValue);
+    }
+
+
+    /**
+     * 设置添加屏幕的背景透明度
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getWindow().setAttributes(lp);
+    }
+
+
+    @Override
+    public String format(int value) {
+        String tmpStr = String.valueOf(value);
+        if (value < 10) {
+            tmpStr = "0" + tmpStr;
+        }
+        return tmpStr;
+    }
+
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        //监听NumberPicker滑动事件 滑动的过程中 tomatoCount也随着改变
+        tomatoCount.setText(newVal+"");
+    }
+
+    @Override
+    public void onScrollStateChange(NumberPicker view, int scrollState) {
+
+    }
+
+    @Override
+    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        //日期选择器 当日起发生改变的事件监听器
+        int month = monthOfYear+1;
+        expireDate.setText(year+"-"+month+"-"+dayOfMonth);
     }
 }

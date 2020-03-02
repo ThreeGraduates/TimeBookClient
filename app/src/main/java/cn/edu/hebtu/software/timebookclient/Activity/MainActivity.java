@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private String serverPath;//服务器地址
     private User currentUser = new User();
     private List<DateTitle> dateTitleList = new ArrayList<DateTitle>();
-    private List<TaskList> taskListList = new ArrayList<TaskList>();
+    private ArrayList<TaskList> taskListList = new ArrayList<TaskList>();
     private ImageView ivAvatar;//填充用户头像的控件
     private TextView tvUsername;//填充用户名的控件
     private TextView tvUserSignature;//填充用户个性签名的控件
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("MainActivity","lvDateTitles:点击各个子项");
                     Intent taskIntent = new Intent(MainActivity.this,CreateTaskActivity.class);
                     currentUser.setId(currentUserId);
+                    taskIntent.putExtra("taskList",  taskListList);
                     taskIntent.putExtra("currentUser",currentUser);
                     taskIntent.putExtra("flag",(int)id);
                     startActivity(taskIntent);

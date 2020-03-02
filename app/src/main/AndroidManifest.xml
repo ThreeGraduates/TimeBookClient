@@ -27,7 +27,7 @@
         <activity android:name=".Activity.RegisterActivity" />
         <activity android:name=".Activity.ForgetActivity" />
         <activity android:name=".Activity.TasklistActivity" />
-        <activity android:name=".Activity.CreateTaskActivity" />
+        <activity android:name=".Activity.CreateTaskActivity"/>
         <activity android:name=".Activity.SetupActivity" />
         <activity android:name=".Activity.PersonalCenterActivity" />
         <activity android:name=".Activity.TaskListManagerActivity"></activity>
