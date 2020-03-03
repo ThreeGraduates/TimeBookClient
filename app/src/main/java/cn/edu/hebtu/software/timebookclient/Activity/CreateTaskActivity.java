@@ -327,6 +327,8 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                 finishListAdapter.setTvUnfinishCount(tvUnfinishCount);
                 unfinishListAdapter.setTvFinishCount(tvFinishCount);
                 finishListAdapter.setTvFinishCount(tvFinishCount);
+                unfinishListAdapter.setTvUsedTime(tvUsedTime);
+                finishListAdapter.setTvUsedTime(tvUsedTime);
 
                 unfinishListAdapter.setFinishListAdapter(finishListAdapter);
                 finishListAdapter.setUnfinishListAdapter(unfinishListAdapter);

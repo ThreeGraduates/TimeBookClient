@@ -119,7 +119,7 @@ public class CTTaskListAdapter extends BaseAdapter {
         }
         viewHolder.tvTasklistName.setText(taskListList.get(position).getTitle());
         if(position == currentPosition){
-            viewHolder.rlRoot.setBackgroundResource(R.color.lightGray);
+            viewHolder.rlRoot.setBackgroundResource(R.color.deepGray);
             viewHolder.ivChose.setVisibility(View.VISIBLE);
         } else{
             viewHolder.rlRoot.setBackgroundResource(R.color.white);

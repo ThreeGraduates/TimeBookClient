@@ -1,6 +1,9 @@
 package cn.edu.hebtu.software.timebookclient.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,6 +44,7 @@ public class UnfinishListAdapter extends BaseAdapter {
     private TextView tvPlanTime;
     private TextView tvUnfinishCount;
     private TextView tvFinishCount;
+    private TextView tvUsedTime;
 
     public UnfinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout,int tomatoTime,int flag) {
         this.context = context;
@@ -81,6 +88,14 @@ public class UnfinishListAdapter extends BaseAdapter {
         this.tvFinishCount = tvFinishCount;
     }
 
+    public TextView getTvUsedTime() {
+        return tvUsedTime;
+    }
+
+    public void setTvUsedTime(TextView tvUsedTime) {
+        this.tvUsedTime = tvUsedTime;
+    }
+
     @Override
     public int getCount() {
         return unfinishTaskList.size();
@@ -107,10 +122,11 @@ public class UnfinishListAdapter extends BaseAdapter {
             viewHolder.tvFinishCount = convertView.findViewById(R.id.tv_finish_tomato_count);
             viewHolder.tvTotalCount = convertView.findViewById(R.id.tv_total_tomato_count);
             viewHolder.tvExpireDate = convertView.findViewById(R.id.tv_expire_date);
+            viewHolder.btnDelete = convertView.findViewById(R.id.btn_delete);
             viewHolder.btnStartTask = convertView.findViewById(R.id.btn_start_task);
             viewHolder.colorIcon = convertView.findViewById(R.id.iv_color_icon);
             viewHolder.tvListname = convertView.findViewById(R.id.tv_listname);
-
+            viewHolder.btnDelete = convertView.findViewById(R.id.btn_delete);
             viewHolder.llList = convertView.findViewById(R.id.ll_list);
             viewHolder.llTomato = convertView.findViewById(R.id.ll_tomato);
             convertView.setTag(viewHolder);
@@ -268,6 +284,63 @@ public class UnfinishListAdapter extends BaseAdapter {
             }
         }
 
+        //为删除任务按钮绑定事件监听器
+        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Task temp = unfinishTaskList.get(position);
+                        unfinishTaskList.remove(position);
+                        notifyDataSetChanged();
+                        int planTime = 0;
+                        int usedTime = 0;
+                        for(Task task : unfinishTaskList){
+                            planTime = task.getCount()*tomatoTime - task.getUseTime();
+                            usedTime += task.getUseTime();
+                        }
+                        tvPlanTime.setText(planTime+"");
+                        tvUsedTime.setText(usedTime+"");
+                        tvUnfinishCount.setText(unfinishTaskList.size()+"");
+
+                        //开启异步任务
+                        Request deleteRequest = new Request.Builder()
+                                .url(serverPath+"task/deleteTask?taskId="+temp.getId())
+                                .build();
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        Call deleteCall = okHttpClient.newCall(deleteRequest);
+                        deleteCall.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                InputStream inputStream = response.body().byteStream();
+                                String result = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+                                Log.e("UnfinishListAdapter","result:"+result);
+                            }
+                        });
+                    }
+                });
+
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do nothing
+                    }
+                });
+
+                builder.setMessage("确认删除该任务？");
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
         //为开始任务按钮绑定事件监听器
         viewHolder.btnStartTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,6 +361,7 @@ public class UnfinishListAdapter extends BaseAdapter {
         public TextView tvFinishCount;
         public TextView tvTotalCount;
         public TextView tvExpireDate;
+        public Button btnDelete;
         public Button btnStartTask;
         public ImageView colorIcon;
         public TextView tvListname;
