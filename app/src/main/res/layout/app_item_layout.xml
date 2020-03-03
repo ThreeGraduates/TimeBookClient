@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:background="#fff"
+    android:padding="10dp"
+    android:gravity="center_vertical">
+    <ImageView
+        android:id="@+id/iv_appIcon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:cropToPadding="true"
+        android:padding="5dp"
+        android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/tv_appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/inkGray"
+        android:text="爱奇艺"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_appTime"
+            android:layout_marginRight="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="20dp"
+            android:textColor="@color/inkGray"
+            android:text="08:00:11"
+            android:gravity="center_vertical"/>
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/right_arrow"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</LinearLayout>

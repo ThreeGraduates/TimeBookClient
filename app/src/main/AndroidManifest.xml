@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="cn.edu.hebtu.software.timebookclient">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,6 +8,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- 获取应用使用情况查看权限 -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -16,11 +22,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.WelcomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".Activity.LoginActivity" />
         <activity android:name=".Activity.MainActivity" />
@@ -30,8 +38,28 @@
         <activity android:name=".Activity.TodayTaskActivity" />
         <activity android:name=".Activity.SetupActivity" />
         <activity android:name=".Activity.PersonalCenterActivity" />
-        <activity android:name=".Activity.TaskListManagerActivity"></activity>
-        <activity android:name=".Activity.ChartActivity"></activity>
+        <activity android:name=".Activity.TaskListManagerActivity" />
+        <activity android:name=".Activity.ChartActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activity.AppActivity">
+
+        </activity>
+        <activity android:name=".Activity.AppTimeLineChartActivity" >
+
+        </activity>
+        <!--注册Service-->
+        <service android:name = ".Service.PhoneTimeService">
+            <!--<intent-filter>-->
+                <!--<action android:name="com.legend.SERVICE_DEMO"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+            <!--</intent-filter>-->
+        </service>
+        <service android:name=".Service.AppTimeService"></service>
     </application>
 
 </manifest>

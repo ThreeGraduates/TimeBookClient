@@ -1,9 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ChartActivity">
+    tools:context=".Activity.ChartActivity"
+    android:orientation="vertical"
+    android:background="@color/gray">
+    <!--标题-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#fff"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/chart_return"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/return_arrow" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="-25dp"
+            android:text="报表"
+            android:textColor="#000"
+            android:textSize="26sp"
+            android:gravity="center"/>
+    </LinearLayout>
+    <!--tabhost-->
 
-</android.support.constraint.ConstraintLayout>
+    <!--饼状图显示番茄任务完成情况-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="360dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:background="#FFF">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center_vertical">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="统计"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textColor="@color/inkGray"-->
+                <!--android:layout_marginLeft="10dp" />-->
+            <!--<Spinner android:id="@+id/sp_year"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:layout_width="67dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:textAlignment="center"-->
+                <!--android:spinnerMode="dropdown"-->
+                <!--android:paddingRight="15dp"-->
+                <!--android:background="@color/lightGray">-->
+            <!--</Spinner>-->
+            <!--<ImageView-->
+                <!--android:layout_width="20dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:src="@drawable/sp_down"-->
+                <!--android:layout_marginLeft="-23dp"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="年"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textColor="@color/inkGray"-->
+                <!--android:layout_marginLeft="5dp" />-->
+            <!--<Spinner android:id="@+id/sp_month"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_width="45dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:textAlignment="center"-->
+                <!--android:spinnerMode="dropdown"-->
+                <!--android:paddingRight="20dp"-->
+                <!--android:background="@color/lightGray">-->
+            <!--</Spinner>-->
+            <!--<ImageView-->
+                <!--android:layout_width="20dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:src="@drawable/sp_down"-->
+                <!--android:layout_marginLeft="-20dp"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="月的番茄任务完成情况"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textColor="@color/inkGray"-->
+                <!--android:layout_marginLeft="4dp" />-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_select"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="5dp"-->
+                    <!--android:textColor="#EA615A"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:text="查询"/>-->
+            <!--</RelativeLayout>-->
+        <!--</LinearLayout>-->
+
+        <!--<View-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1px"-->
+            <!--android:background="@color/gray"></View>-->
+
+        <!--<lecho.lib.hellocharts.view.PieChartView-->
+            <!--android:layout_marginLeft="-27dp"-->
+            <!--android:id="@+id/pieChart"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="300dp" />-->
+    <!--</LinearLayout>-->
+
+</LinearLayout>

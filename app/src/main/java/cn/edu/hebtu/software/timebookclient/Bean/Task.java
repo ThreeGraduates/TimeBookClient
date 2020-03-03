@@ -13,7 +13,7 @@ public class Task {
     private Date createDate;   //任务创建日期
     private Date expireDate; //任务截止日期
     private Timestamp startDateTime;  //任务开始时间
-   private Timestamp completeDateTime;//任务完成时间
+    private Timestamp completeDateTime;//任务完成时间
     private String repeat;    //重复次数
     private String remark;    //备注
     private Long userId;//创建任务的用户
