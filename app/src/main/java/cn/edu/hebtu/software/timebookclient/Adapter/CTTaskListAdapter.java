@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class CTTaskListAdapter extends BaseAdapter {
     private Context context;
     private List<TaskList> taskListList;
     private int itemLayout;
+    private int currentPosition ;//默认被选中的位置
 
-    public CTTaskListAdapter(Context context, List<TaskList> taskListList, int itemLayout) {
+    public CTTaskListAdapter(Context context, List<TaskList> taskListList, int itemLayout,int defaultPosition) {
         this.context = context;
         this.taskListList = taskListList;
         this.itemLayout = itemLayout;
+        this.currentPosition = defaultPosition;
     }
 
     @Override
@@ -40,14 +43,20 @@ public class CTTaskListAdapter extends BaseAdapter {
         return position;
     }
 
+    public void changeSelected(int defaultPosition){
+        currentPosition = defaultPosition;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if(convertView == null){
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(itemLayout,null);
+            viewHolder.rlRoot = convertView.findViewById(R.id.rl_root);
             viewHolder.ivColor = convertView.findViewById(R.id.iv_color);
             viewHolder.tvTasklistName = convertView.findViewById(R.id.tv_list_title);
+            viewHolder.ivChose = convertView.findViewById(R.id.iv_chose);
             convertView.setTag(viewHolder);
         }else
             viewHolder = (ViewHolder) convertView.getTag();
@@ -109,14 +118,22 @@ public class CTTaskListAdapter extends BaseAdapter {
                 break;
         }
         viewHolder.tvTasklistName.setText(taskListList.get(position).getTitle());
+        if(position == currentPosition){
+            viewHolder.rlRoot.setBackgroundResource(R.color.lightGray);
+            viewHolder.ivChose.setVisibility(View.VISIBLE);
+        } else{
+            viewHolder.rlRoot.setBackgroundResource(R.color.white);
+            viewHolder.ivChose.setVisibility(View.GONE);
+        }
 
         return convertView;
     }
 
     private class ViewHolder{
-
+        public RelativeLayout rlRoot;
         public ImageView ivColor;
         public TextView tvTasklistName;
+        public  ImageView ivChose;
 
     }
 }

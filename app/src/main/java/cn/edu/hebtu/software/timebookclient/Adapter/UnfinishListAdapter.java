@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -32,14 +33,20 @@ public class UnfinishListAdapter extends BaseAdapter {
     private int tomatoTime;
     private FinishListAdapter finishListAdapter;
     private String serverPath;
+    private int flag;
 
-    public UnfinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout,int tomatoTime) {
+    private TextView tvPlanTime;
+    private TextView tvUnfinishCount;
+    private TextView tvFinishCount;
+
+    public UnfinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout,int tomatoTime,int flag) {
         this.context = context;
         this.finishTaskList = finishTaskList;
         this.unfinishTaskList = unfinishTaskList;
         this.itemLayout = itemLayout;
         this.tomatoTime = tomatoTime;
         this.serverPath = context.getResources().getString(R.string.server_path);
+        this.flag = flag;
     }
 
     public FinishListAdapter getFinishListAdapter() {
@@ -48,6 +55,30 @@ public class UnfinishListAdapter extends BaseAdapter {
 
     public void setFinishListAdapter(FinishListAdapter finishListAdapter) {
         this.finishListAdapter = finishListAdapter;
+    }
+
+    public TextView getTvPlanTime() {
+        return tvPlanTime;
+    }
+
+    public void setTvPlanTime(TextView tvPlanTime) {
+        this.tvPlanTime = tvPlanTime;
+    }
+
+    public TextView getTvUnfinishCount() {
+        return tvUnfinishCount;
+    }
+
+    public void setTvUnfinishCount(TextView tvUnfinishCount) {
+        this.tvUnfinishCount = tvUnfinishCount;
+    }
+
+    public TextView getTvFinishCount() {
+        return tvFinishCount;
+    }
+
+    public void setTvFinishCount(TextView tvFinishCount) {
+        this.tvFinishCount = tvFinishCount;
     }
 
     @Override
@@ -79,6 +110,9 @@ public class UnfinishListAdapter extends BaseAdapter {
             viewHolder.btnStartTask = convertView.findViewById(R.id.btn_start_task);
             viewHolder.colorIcon = convertView.findViewById(R.id.iv_color_icon);
             viewHolder.tvListname = convertView.findViewById(R.id.tv_listname);
+
+            viewHolder.llList = convertView.findViewById(R.id.ll_list);
+            viewHolder.llTomato = convertView.findViewById(R.id.ll_tomato);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -112,17 +146,32 @@ public class UnfinishListAdapter extends BaseAdapter {
                  notifyDataSetChanged();
                  finishListAdapter.notifyDataSetChanged();
 
+                //改变总览处的几个数据
+                int planTime = 0;
+                for(Task item : unfinishTaskList)
+                    planTime = planTime+item.getCount() * tomatoTime- task.getUseTime();
+
+                tvPlanTime.setText(planTime+"");
+                tvUnfinishCount.setText(unfinishTaskList.size()+"");
+                tvFinishCount.setText(finishTaskList.size()+"");
+
                  //开启异步任务改变数据库中的数据
                 Request request = new Request.Builder()
                         .url(serverPath+"transFormTaskStatus?taskId=+"+task.getId()+"&flag="+task.getFlag())
                         .build();
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Call call = okHttpClient.newCall(request);
-                try {
-                    call.execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                    }
+                });
 
             }
         });
@@ -133,80 +182,90 @@ public class UnfinishListAdapter extends BaseAdapter {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd");
         String date = dateFormat.format(unfinishTaskList.get(position).getExpireDate());
         viewHolder.tvExpireDate.setText(date);
-        viewHolder.tvListname.setText(unfinishTaskList.get(position).getList_title());
-        switch (unfinishTaskList.get(position).getList_colorId()){
-            case R.color.color1:
-                viewHolder.colorIcon.setImageResource(R.color.color1);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color1));
-                break;
-            case R.color.color2:
-                viewHolder.colorIcon.setImageResource(R.color.color2);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color2));
-                break;
-            case R.color.color3:
-                viewHolder.colorIcon.setImageResource(R.color.color3);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color3));
-                break;
-            case R.color.color4:
-                viewHolder.colorIcon.setImageResource(R.color.color4);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color4));
-                break;
-            case R.color.color5:
-                viewHolder.colorIcon.setImageResource(R.color.color5);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color5));
-                break;
-            case R.color.color6:
-                viewHolder.colorIcon.setImageResource(R.color.color6);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color6));
-                break;
-            case R.color.color7:
-                viewHolder.colorIcon.setImageResource(R.color.color7);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color7));
-                break;
-            case R.color.color8:
-                viewHolder.colorIcon.setImageResource(R.color.color8);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color8));
-                break;
-            case R.color.color9:
-                viewHolder.colorIcon.setImageResource(R.color.color9);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color9));
-                break;
-            case R.color.color10:
-                viewHolder.colorIcon.setImageResource(R.color.color10);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color10));
-                break;
-            case R.color.color11:
-                viewHolder.colorIcon.setImageResource(R.color.color11);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color11));
-                break;
-            case R.color.color12:
-                viewHolder.colorIcon.setImageResource(R.color.color12);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color12));
-                break;
-            case R.color.color13:
-                viewHolder.colorIcon.setImageResource(R.color.color13);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color13));
-                break;
-            case R.color.color14:
-                viewHolder.colorIcon.setImageResource(R.color.color14);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color14));
-                break;
-            case R.color.color15:
-                viewHolder.colorIcon.setImageResource(R.color.color15);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color15));
-                break;
-            case R.color.color16:
-                viewHolder.colorIcon.setImageResource(R.color.color16);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color16));
-                break;
-            case R.color.color17:
-                viewHolder.colorIcon.setImageResource(R.color.color17);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color17));
-                break;
-            case R.color.color18:
-                viewHolder.colorIcon.setImageResource(R.color.color18);
-                viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color18));
-                break;
+
+        if(flag == 1){
+            //表示从任务清单进入
+            viewHolder.llList.setVisibility(View.GONE);
+            ((ViewGroup.MarginLayoutParams)viewHolder.llTomato.getLayoutParams()).setMargins(85,6,0,10);
+        }else if(flag == 0){
+            //表示从日期进入
+            viewHolder.llList.setVisibility(View.VISIBLE);
+            ((ViewGroup.MarginLayoutParams)viewHolder.llTomato.getLayoutParams()).setMargins(10,6,0,10);
+            viewHolder.tvListname.setText(unfinishTaskList.get(position).getList_title());
+            switch (unfinishTaskList.get(position).getList_colorId()){
+                case R.color.color1:
+                    viewHolder.colorIcon.setImageResource(R.color.color1);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color1));
+                    break;
+                case R.color.color2:
+                    viewHolder.colorIcon.setImageResource(R.color.color2);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color2));
+                    break;
+                case R.color.color3:
+                    viewHolder.colorIcon.setImageResource(R.color.color3);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color3));
+                    break;
+                case R.color.color4:
+                    viewHolder.colorIcon.setImageResource(R.color.color4);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color4));
+                    break;
+                case R.color.color5:
+                    viewHolder.colorIcon.setImageResource(R.color.color5);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color5));
+                    break;
+                case R.color.color6:
+                    viewHolder.colorIcon.setImageResource(R.color.color6);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color6));
+                    break;
+                case R.color.color7:
+                    viewHolder.colorIcon.setImageResource(R.color.color7);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color7));
+                    break;
+                case R.color.color8:
+                    viewHolder.colorIcon.setImageResource(R.color.color8);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color8));
+                    break;
+                case R.color.color9:
+                    viewHolder.colorIcon.setImageResource(R.color.color9);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color9));
+                    break;
+                case R.color.color10:
+                    viewHolder.colorIcon.setImageResource(R.color.color10);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color10));
+                    break;
+                case R.color.color11:
+                    viewHolder.colorIcon.setImageResource(R.color.color11);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color11));
+                    break;
+                case R.color.color12:
+                    viewHolder.colorIcon.setImageResource(R.color.color12);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color12));
+                    break;
+                case R.color.color13:
+                    viewHolder.colorIcon.setImageResource(R.color.color13);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color13));
+                    break;
+                case R.color.color14:
+                    viewHolder.colorIcon.setImageResource(R.color.color14);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color14));
+                    break;
+                case R.color.color15:
+                    viewHolder.colorIcon.setImageResource(R.color.color15);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color15));
+                    break;
+                case R.color.color16:
+                    viewHolder.colorIcon.setImageResource(R.color.color16);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color16));
+                    break;
+                case R.color.color17:
+                    viewHolder.colorIcon.setImageResource(R.color.color17);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color17));
+                    break;
+                case R.color.color18:
+                    viewHolder.colorIcon.setImageResource(R.color.color18);
+                    viewHolder.tvListname.setTextColor(context.getResources().getColor(R.color.color18));
+                    break;
+            }
         }
 
         //为开始任务按钮绑定事件监听器
@@ -224,6 +283,8 @@ public class UnfinishListAdapter extends BaseAdapter {
     private class ViewHolder{
         public Button btnFinish;
         public TextView tvTaskname;
+        public LinearLayout llList;
+        public LinearLayout llTomato;
         public TextView tvFinishCount;
         public TextView tvTotalCount;
         public TextView tvExpireDate;

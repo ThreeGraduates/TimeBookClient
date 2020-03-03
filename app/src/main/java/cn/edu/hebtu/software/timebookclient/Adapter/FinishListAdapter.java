@@ -1,6 +1,5 @@
 package cn.edu.hebtu.software.timebookclient.Adapter;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -8,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -21,8 +22,10 @@ import java.util.List;
 import cn.edu.hebtu.software.timebookclient.Bean.Task;
 import cn.edu.hebtu.software.timebookclient.R;
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 public class FinishListAdapter extends BaseAdapter {
 
@@ -33,14 +36,20 @@ public class FinishListAdapter extends BaseAdapter {
     private int tomatoTime;
     private UnfinishListAdapter unfinishListAdapter;
     private  String serverPath;
+    private  int flag;
 
-    public FinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout, int tomatoTime) {
+    private TextView tvPlanTime;
+    private TextView tvUnfinishCount;
+    private TextView tvFinishCount;
+
+    public FinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout, int tomatoTime,int flag) {
         this.context = context;
         this.finishTaskList = finishTaskList;
         this.unfinishTaskList = unfinishTaskList;
         this.itemLayout = itemLayout;
         this.tomatoTime = tomatoTime;
         this.serverPath = context.getResources().getString(R.string.server_path);
+        this.flag= flag;
     }
 
     public UnfinishListAdapter getUnfinishListAdapter() {
@@ -49,6 +58,31 @@ public class FinishListAdapter extends BaseAdapter {
 
     public void setUnfinishListAdapter(UnfinishListAdapter unfinishListAdapter) {
         this.unfinishListAdapter = unfinishListAdapter;
+    }
+
+    public TextView getTvPlanTime() {
+        return tvPlanTime;
+    }
+
+    public void setTvPlanTime(TextView tvPlanTime) {
+        this.tvPlanTime = tvPlanTime;
+    }
+
+    public TextView getTvUnfinishCount() {
+        return tvUnfinishCount;
+    }
+
+    public void setTvUnfinishCount(TextView tvUnfinishCount) {
+        this.tvUnfinishCount = tvUnfinishCount;
+    }
+
+
+    public TextView getTvFinishCount() {
+        return tvFinishCount;
+    }
+
+    public void setTvFinishCount(TextView tvFinishCount) {
+        this.tvFinishCount = tvFinishCount;
     }
 
     @Override
@@ -77,7 +111,10 @@ public class FinishListAdapter extends BaseAdapter {
             viewHolder.tvListName = convertView.findViewById(R.id.tv_listname);
             viewHolder.tvFinishTomatoCount = convertView.findViewById(R.id.tv_finish_tomato_count);
             viewHolder.tvCompleteDate = convertView.findViewById(R.id.tv_complete_date);
+            viewHolder.colorIcon = convertView.findViewById(R.id.iv_color_icon);
             viewHolder.btnStartTask = convertView.findViewById(R.id.btn_start_task);
+            viewHolder.llList = convertView.findViewById(R.id.ll_list);
+            viewHolder.llTomato = convertView.findViewById(R.id.ll_tomato);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -105,32 +142,56 @@ public class FinishListAdapter extends BaseAdapter {
                 Collections.sort(finishTaskList, new Comparator<Task>() {
                     @Override
                     public int compare(Task o1, Task o2) {
-                        int flag = o1.getCompleteDateTime().compareTo(o2.getCompleteDateTime());
-                        return flag;
+                        return o1.getCompleteDateTime().compareTo(o2.getCompleteDateTime());
                     }
                 });
+
                 notifyDataSetChanged();
                 unfinishListAdapter.notifyDataSetChanged();
+                //改变总览处的几个数据
+                int planTime = 0;
+                for(Task item : unfinishTaskList)
+                    planTime = planTime+item.getCount() * tomatoTime- task.getUseTime();
 
-                //开启异步任务 改变数据库中的数据
+                tvPlanTime.setText(planTime+"");
+                tvUnfinishCount.setText(unfinishTaskList.size()+"");
+                tvFinishCount.setText(finishTaskList.size()+"");
+
+
                 //开启异步任务改变数据库中的数据
                 Request request = new Request.Builder()
                         .url(serverPath+"transFormTaskStatus?taskId=+"+task.getId()+"&flag="+task.getFlag())
                         .build();
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Call call = okHttpClient.newCall(request);
-                try {
-                    call.execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                    }
+                });
 
             }
         });
         viewHolder.tvTaskName.setText(finishTaskList.get(position).getTitle());
         //添加删除线
         viewHolder.tvTaskName.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        viewHolder.tvListName.setText(finishTaskList.get(position).getList_title());
+        if (flag == 0){
+            //表示从日期进入
+            viewHolder.llList.setVisibility(View.VISIBLE);
+            ((ViewGroup.MarginLayoutParams)viewHolder.llTomato.getLayoutParams()).setMargins(10,6,0,10);
+            viewHolder.tvListName.setText(finishTaskList.get(position).getList_title());
+        }else if (flag == 1){
+            //表示从任务清单进入
+            viewHolder.llList.setVisibility(View.GONE);
+            ((ViewGroup.MarginLayoutParams)viewHolder.llTomato.getLayoutParams()).setMargins(85,6,0,10);
+        }
+
         viewHolder.tvFinishTomatoCount.setText(finishTaskList.get(position).getUseTime()/(float)tomatoTime+"");
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm");
         String date = dateFormat.format(finishTaskList.get(position).getCompleteDateTime());
@@ -150,6 +211,9 @@ public class FinishListAdapter extends BaseAdapter {
         public TextView tvListName;
         public TextView tvFinishTomatoCount;
         public TextView tvCompleteDate;
+        public ImageView colorIcon;
+        public LinearLayout llList;
+        public LinearLayout llTomato;
         public Button btnStartTask;
     }
 }

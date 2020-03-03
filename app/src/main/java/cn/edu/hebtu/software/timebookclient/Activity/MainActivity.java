@@ -22,17 +22,18 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.hebtu.software.timebookclient.Adapter.DateListAdapter;
 import cn.edu.hebtu.software.timebookclient.Adapter.TaskListAdapter;
+import cn.edu.hebtu.software.timebookclient.Bean.Task;
 import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
 import cn.edu.hebtu.software.timebookclient.Bean.User;
 import cn.edu.hebtu.software.timebookclient.R;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     private UserHandler userHandler = new UserHandler();
     private Long currentUserId;
 
+    private int listPosition = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         currentUserId = sharedPreferences.getLong("userId",0);
 
         final Integer userId = currentUserId.intValue();
+        currentUser.setId(currentUserId);
 
         //开启异步请求获取任务清单数据
         Request request = new Request.Builder()
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                     //为各个子项绑定点击事件监听
                     Log.e("MainActivity","lvDateTitles:点击各个子项");
                     Intent taskIntent = new Intent(MainActivity.this,CreateTaskActivity.class);
-                    currentUser.setId(currentUserId);
+
                     taskIntent.putExtra("taskList",  taskListList);
                     taskIntent.putExtra("currentUser",currentUser);
                     taskIntent.putExtra("flag",(int)id);
@@ -226,11 +230,19 @@ public class MainActivity extends AppCompatActivity {
             taskListAdapter.notifyDataSetChanged();
             lvTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                     //为各个子项绑定点击事件监听
+                    Intent listIntent = new Intent(MainActivity.this,CreateTaskActivity.class);
+                    listIntent.putExtra("taskList",taskListList);
+                    listIntent.putExtra("currentUser",currentUser);
+                    listIntent.putExtra("flag",3);
+                    listIntent.putExtra("listPosition",position);
+                    startActivity(listIntent);
 
                 }
             });
         }
     }
+
 }
+

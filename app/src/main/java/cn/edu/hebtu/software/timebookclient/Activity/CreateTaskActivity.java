@@ -1,5 +1,6 @@
 package cn.edu.hebtu.software.timebookclient.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -100,6 +102,8 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
     private int usedTime = 0;//表示今日已使用的时间为 0
     private int index = 0;
     private int flag = 0;
+    private int listPosition = -1;
+    private  String listResult;
 
     private User currentUser = new User();
     @Override
@@ -114,7 +118,8 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
         currentUser = (User) mainIntent.getSerializableExtra("currentUser");
         taskLists = (ArrayList<TaskList>) mainIntent.getSerializableExtra("taskList");
         flag = mainIntent.getIntExtra("flag",-1);
-        Log.e("CreateTaskActivity","tomatoTime-"+currentUser.getTomatoTime());
+        listPosition = mainIntent.getIntExtra("listPosition",-1);
+
         switch (flag){
             case 0:
                 //从主页点击了"今天"跳转到该页面
@@ -131,14 +136,21 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                 tvDate.setText("即将到来");
                 llSummary.setVisibility(View.GONE);
                 break;
+            case 3:
+                //从主页点击某项清单跳转到该页面
+                tvDate.setText(taskLists.get(listPosition).getTitle());
+                llSummary.setVisibility(View.VISIBLE);
+                break;
         }
 
-        taskListAdapter = new CTTaskListAdapter(this,taskLists,R.layout.create_task_tasklist_item_layout);
+
 
         //为返回按钮 绑定点击事件监听器
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(CreateTaskActivity.this,MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -161,43 +173,91 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
         //获得当前SharedPreferences内的id
         Long id = getSharedPreferences("data",MODE_PRIVATE).getLong("userId",0);
         currentUser.setId(id);
-
-        //从服务器端获取任务列表
-        Request request = new Request.Builder()
-                .url(serverPath+"taskList/getTasksTodayAndTomorrowAndSoon?flag="+flag+"&userId="+currentUser.getId())
-                .build();
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("CreateTaskActivity","网络响应时间过长");
-                Message failMessage = new Message();
-                failMessage.what = -1;
-                createHandler.sendMessage(failMessage);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                InputStream inputStream = response.body().byteStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String result = bufferedReader.readLine();
-                Log.e("CreateTaskActivity","result"+result);
-                totalTaskList = gson.fromJson(result,new TypeToken<List<Task>>(){}.getType());
-                //将获取到的总的任务按照完成和未完成进行分类
-                for(Task task : totalTaskList){
-                    if(task.getFlag() == 0)
-                        //该任务未开始
-                        unfinishTaskList.add(task);
-                    else if(task.getFlag() == 1)
-                        //该任务已完成
-                        finishTaskList.add(task);
+        if(flag == 3) {
+            Log.e("CreateTaskActivity","当前任务列表id:"+taskLists.get(listPosition).getId());
+            //从服务器端 根据任务清单id获取该清单的任务列表
+            final Request listRequest = new Request.Builder()
+                    .url(serverPath+"taskList/getTasksByListId?taskListId="+taskLists.get(listPosition).getId())
+                    .build();
+            OkHttpClient listOkHttpClient = new OkHttpClient();
+            Call listCall = listOkHttpClient.newCall(listRequest);
+            listCall.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("CreateTaskActivity","网络响应时间过长");
+                    Message failMessage = new Message();
+                    failMessage.what = -1;
+                    createHandler.sendMessage(failMessage);
                 }
-                Message message = new Message();
-                message.what = 1;
-                createHandler.sendMessage(message);
-            }
-        });
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    InputStream inputStream = response.body().byteStream();
+                    listResult = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+                    Log.e("CreateTaskActivity","根据清单id获取到的数据:"+listResult);
+                    Gson gson = new GsonBuilder()
+                            .serializeNulls()
+                            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                            .create();
+                    totalTaskList = gson.fromJson(listResult,new TypeToken<List<Task>>(){}.getType());
+                    //将获取到的总的任务按照完成和未完成进行分类
+                    for(Task task : totalTaskList){
+                        if(task.getFlag() == 0)
+                            //该任务未开始
+                            unfinishTaskList.add(task);
+                        else if(task.getFlag() == 1)
+                            //该任务已完成
+                            finishTaskList.add(task);
+                        usedTime +=task.getUseTime();
+                    }
+                    Message message = new Message();
+                    message.what = 1;
+                    createHandler.sendMessage(message);
+                }
+            });
+
+        }else{
+
+            //从服务器端获取任务列表
+            Request request = new Request.Builder()
+                    .url(serverPath+"taskList/getTasksTodayAndTomorrowAndSoon?flag="+flag+"&userId="+currentUser.getId())
+                    .build();
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Call call = okHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("CreateTaskActivity","网络响应时间过长");
+                    Message failMessage = new Message();
+                    failMessage.what = -1;
+                    createHandler.sendMessage(failMessage);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    InputStream inputStream = response.body().byteStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    String result = bufferedReader.readLine();
+                    Log.e("CreateTaskActivity","根据日期获取到的数据:"+result);
+                    totalTaskList = gson.fromJson(result,new TypeToken<List<Task>>(){}.getType());
+                    //将获取到的总的任务按照完成和未完成进行分类
+                    for(Task task : totalTaskList){
+                        if(task.getFlag() == 0)
+                            //该任务未开始
+                            unfinishTaskList.add(task);
+                        else if(task.getFlag() == 1)
+                            //该任务已完成
+                            finishTaskList.add(task);
+                        usedTime +=task.getUseTime();
+                    }
+                    Message message = new Message();
+                    message.what = 1;
+                    createHandler.sendMessage(message);
+                }
+            });
+
+        }
+
 
 
         //为显示已完成任务列表按钮绑定点击事件监听器
@@ -251,8 +311,23 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                 tvUsedTime.setText(usedTime+"");
                 tvFinishCount.setText(finishTaskList.size()+"");
 
-                unfinishListAdapter = new UnfinishListAdapter(CreateTaskActivity.this,finishTaskList,unfinishTaskList,R.layout.unfinish_tasks_item_layout,currentUser.getTomatoTime());
-                finishListAdapter = new FinishListAdapter(CreateTaskActivity.this,finishTaskList,unfinishTaskList,R.layout.finish_tasks_item_layout,currentUser.getTomatoTime());
+                if(flag == 3){
+                    //从任务清单点击进入
+                    unfinishListAdapter = new UnfinishListAdapter(CreateTaskActivity.this,finishTaskList,unfinishTaskList,R.layout.unfinish_tasks_item_layout,currentUser.getTomatoTime(),1);
+                    finishListAdapter = new FinishListAdapter(CreateTaskActivity.this,finishTaskList,unfinishTaskList,R.layout.finish_tasks_item_layout,currentUser.getTomatoTime(),1);
+                }else{
+                    //从日期点击进入
+                    unfinishListAdapter = new UnfinishListAdapter(CreateTaskActivity.this,finishTaskList,unfinishTaskList,R.layout.unfinish_tasks_item_layout,currentUser.getTomatoTime(),0);
+                    finishListAdapter = new FinishListAdapter(CreateTaskActivity.this,finishTaskList,unfinishTaskList,R.layout.finish_tasks_item_layout,currentUser.getTomatoTime(),0);
+                }
+
+                unfinishListAdapter.setTvPlanTime(tvPlanTime);
+                finishListAdapter.setTvPlanTime(tvPlanTime);
+                unfinishListAdapter.setTvUnfinishCount(tvUnfinishCount);
+                finishListAdapter.setTvUnfinishCount(tvUnfinishCount);
+                unfinishListAdapter.setTvFinishCount(tvFinishCount);
+                finishListAdapter.setTvFinishCount(tvFinishCount);
+
                 unfinishListAdapter.setFinishListAdapter(finishListAdapter);
                 finishListAdapter.setUnfinishListAdapter(unfinishListAdapter);
                 //为unfinishListView绑定adapter
@@ -454,15 +529,27 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
             }
         });
 
+        if(flag == 3){
+            //表示从清单处进入创建任务页面
+            tvListTitle.setText(taskLists.get(listPosition).getTitle());
+            taskListAdapter = new CTTaskListAdapter(this,taskLists,R.layout.create_task_tasklist_item_layout,listPosition);
+        }else{
+            //表示从日期处进入创建任务页面
+            tvListTitle.setText("");
+            taskListAdapter = new CTTaskListAdapter(this,taskLists,R.layout.create_task_tasklist_item_layout,0);
+        }
 
         lvTaskList.setAdapter(taskListAdapter);
         lvTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TaskList taskList = taskLists.get(position);
                 tvListTitle.setText(taskList.getTitle());
                 lvTaskList.setVisibility(View.GONE);
                 index = position;
+                taskListAdapter.changeSelected(position);
+                taskListAdapter.notifyDataSetChanged();
             }
         });
         //点击 选择任务清单

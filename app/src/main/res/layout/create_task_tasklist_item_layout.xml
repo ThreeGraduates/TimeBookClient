@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:background="@android:color/white">
@@ -21,5 +22,12 @@
         android:layout_toRightOf="@id/iv_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
+    <ImageView
+        android:id="@+id/iv_chose"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/chose"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
 </RelativeLayout>

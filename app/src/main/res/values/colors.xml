@@ -32,4 +32,5 @@
     <color name="lightBlack">#757575</color>
     <color name="finishFontColor">#EA615A</color>
     <color name="unfinishFontColor">#F9DBD9</color>
+    <color name="white">#ffffff</color>
 </resources>
