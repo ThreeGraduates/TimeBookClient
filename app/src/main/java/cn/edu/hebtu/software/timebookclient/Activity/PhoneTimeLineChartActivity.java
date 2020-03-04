@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.hebtu.software.timebookclient.Bean.AppTime;
+import cn.edu.hebtu.software.timebookclient.Bean.PhoneTime;
 import cn.edu.hebtu.software.timebookclient.R;
 import lecho.lib.hellocharts.formatter.SimpleLineChartValueFormatter;
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -41,13 +42,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class AppTimeLineChartActivity extends AppCompatActivity {
+public class PhoneTimeLineChartActivity extends AppCompatActivity {
     private Gson gson;
     private OkHttpClient okHttpClient;
     private String path;
     private Long userId;
-    private String appName;
-    private List<AppTime> appTimes;
+    private List<PhoneTime> phoneTimes;
 
     private LineChartView lineChart;
     private TextView lineChartTitle;
@@ -58,10 +58,7 @@ public class AppTimeLineChartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apptime_linechart);
-
-        appName=getIntent().getStringExtra("appName");
-
+        setContentView(R.layout.activity_phonetime_linechart);
 
         okHttpClient=new OkHttpClient();
         GsonBuilder builder=new GsonBuilder();
@@ -72,7 +69,6 @@ public class AppTimeLineChartActivity extends AppCompatActivity {
 
         lineChart=findViewById(R.id.lineChart);
         lineChartTitle=findViewById(R.id.lineChartTitle);
-        lineChartTitle.setText(appName);
         //返回
         ImageView imageView=findViewById(R.id.line_return);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -82,23 +78,22 @@ public class AppTimeLineChartActivity extends AppCompatActivity {
             }
         });
 
-        GetAppTimesByUserIdTask getAppTimesByUserIdTask=new GetAppTimesByUserIdTask();
-        getAppTimesByUserIdTask.execute();
+        GetPhoneTimesByUserIdTask getPhoneTimesByUserIdTask=new GetPhoneTimesByUserIdTask();
+        getPhoneTimesByUserIdTask.execute();
     }
 
 
-    //根据用户Id获取用户详情
-    class GetAppTimesByUserIdTask extends AsyncTask {
+    class GetPhoneTimesByUserIdTask extends AsyncTask {
         @Override
         protected Object doInBackground(Object[] objects) {
             Request request=new Request.Builder()
-                    .url(path+"appTime/getAppTimesByUserId?userId="+userId+"&appName="+appName)
+                    .url(path+"phoneTime/getPhoneTimesByUserId?userId="+userId)
                     .build();
             Call call=okHttpClient.newCall(request);
             try {
                 Response response=call.execute();
                 String resJson=response.body().string();
-                appTimes = gson.fromJson(resJson, new TypeToken<List<AppTime>>(){}.getType());
+                phoneTimes = gson.fromJson(resJson, new TypeToken<List<PhoneTime>>(){}.getType());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -118,23 +113,23 @@ public class AppTimeLineChartActivity extends AppCompatActivity {
     }
 
     /**
-     * 设置X轴的显示
-     */
+          * 设置X轴的显示
+          */
     private void initAxisXLables() throws ParseException {
         SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf=new SimpleDateFormat("MM-dd");
         //todo x轴最少有2个
-        for(int i=0;i<appTimes.size();i++){
-            mAxisXValues.add(new AxisValue(i).setLabel(sdf.format(sdf1.parse(appTimes.get(i).getCreateDate()))));
+        for(int i=0;i<phoneTimes.size();i++){
+            mAxisXValues.add(new AxisValue(i).setLabel(sdf.format(sdf1.parse(phoneTimes.get(i).getCreateDate()))));
         }
     }
 
     /**
-     * 图表的每个点的显示 (纵轴以 分钟 为单位)
-     */
+          * 图表的每个点的显示 (纵轴以 分钟 为单位)
+          */
     private void initAxisPoints() {
-        for (int i = 0; i < appTimes.size(); i++) {
-            long time=appTimes.get(i).getTime();  //毫秒
+        for (int i = 0; i < phoneTimes.size(); i++) {
+            long time=phoneTimes.get(i).getTime();  //毫秒
             mPointValues.add(new PointValue(i, (float) time/(float)60000));
         }
     }
@@ -184,7 +179,7 @@ public class AppTimeLineChartActivity extends AppCompatActivity {
         lineChart.setOnValueTouchListener(new LineChartOnValueSelectListener() {
             @Override
             public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-                Toast.makeText(AppTimeLineChartActivity.this, ""+value.getY(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PhoneTimeLineChartActivity.this, ""+value.getY(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -195,3 +190,4 @@ public class AppTimeLineChartActivity extends AppCompatActivity {
         lineChart.setVisibility(View.VISIBLE);
     }
 }
+

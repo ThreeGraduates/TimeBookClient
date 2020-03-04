@@ -1,21 +1,26 @@
-package cn.edu.hebtu.software.timebookclient.Activity;
+package cn.edu.hebtu.software.timebookclient.fragment;
 
+import android.app.AlertDialog;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.os.Build;;
-import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,60 +29,48 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
+import cn.edu.hebtu.software.timebookclient.Activity.AppTimeLineChartActivity;
 import cn.edu.hebtu.software.timebookclient.Adapter.AppUseTimeAdapter;
 import cn.edu.hebtu.software.timebookclient.R;
-import cn.edu.hebtu.software.timebookclient.Service.AppTimeService;
 
-public class AppActivity extends AppCompatActivity {
+public class AppFragment extends Fragment{
     private ListView lvApps;
     private AppUseTimeAdapter appUseTimeAdapter;
     private List<AppInfo> appInfoList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app);
-        //todo 开启手机app时间定时任务服务
-        startService(new Intent(AppActivity.this, AppTimeService.class));
-
-        lvApps = findViewById(R.id.lv_apps);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view=inflater.inflate(R.layout.app_fragment_layout,container,false);
+        lvApps = view.findViewById(R.id.lv_apps);
         //todo 注意时间是否修改了
         initData();
-        appUseTimeAdapter = new AppUseTimeAdapter(appInfoList, getApplicationContext());
+        appUseTimeAdapter = new AppUseTimeAdapter(appInfoList, getContext());
         lvApps.setAdapter(appUseTimeAdapter);
         //点击进入app使用时长折线图
         lvApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(AppActivity.this,AppTimeLineChartActivity.class);
+                Intent intent=new Intent(getContext(),AppTimeLineChartActivity.class);
                 intent.putExtra("appName",appInfoList.get(position).getAppName());
                 startActivity(intent);
             }
         });
-        //返回
-        ImageView imageView=findViewById(R.id.app_return);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(AppActivity.this,ChartActivity.class);
-                startActivity(intent);
-            }
-        });
+        return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void initData() {
         //确定时间范围(统计最近一个星期内手机app的使用情况)
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+        UsageStatsManager usm = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
         Calendar calendar = Calendar.getInstance();
         Long endTime = calendar.getTimeInMillis();
-        Log.e("一星期前:", sdf.format(endTime));
+//        Log.e("一星期前:", sdf.format(endTime));
         calendar.add(Calendar.DAY_OF_MONTH, -7);
         long startTime = calendar.getTimeInMillis();
-        Log.e("现在:", sdf.format(startTime));
+//        Log.e("现在:", sdf.format(startTime));
 
         /*
          * 最近一个星期内启动过所用app的List
@@ -87,16 +80,27 @@ public class AppActivity extends AppCompatActivity {
         if (list.size() == 0) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 try {
-                    //进入打开 “获取应用使用情况权限” 页面
-                    startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("温馨提示")
+                            .setMessage("使用此功能，我们需要获取您的“应用使用情况”权限")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //进入打开 “获取应用使用情况权限” 页面
+                                    startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                                }
+                            })
+                            .setNegativeButton("取消",null)
+                            .create()
+                            .show();
                 } catch (Exception e) {
-                    Toast.makeText(this, "无法开启允许查看使用情况的应用界面", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "无法开启允许查看使用情况的应用界面", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }
         } else {
             for (UsageStats us : list) {
-                PackageManager pm = getApplicationContext().getPackageManager();
+                PackageManager pm = getActivity().getApplicationContext().getPackageManager();
                 try {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo(us.getPackageName(), PackageManager.GET_META_DATA);
                     if ((applicationInfo.flags & applicationInfo.FLAG_SYSTEM) <= 0) {  //去除系统应用

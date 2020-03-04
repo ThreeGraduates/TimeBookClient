@@ -2,51 +2,29 @@ package cn.edu.hebtu.software.timebookclient.Adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.List;
 
-import javax.xml.transform.dom.DOMResult;
-
-import cn.edu.hebtu.software.timebookclient.Activity.AppActivity;
-import cn.edu.hebtu.software.timebookclient.Activity.PersonalCenterActivity;
-import cn.edu.hebtu.software.timebookclient.Activity.TaskListManagerActivity;
-import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
 import cn.edu.hebtu.software.timebookclient.R;
-
-import static java.security.AccessController.getContext;
+import cn.edu.hebtu.software.timebookclient.fragment.AppFragment;
 
 public class AppUseTimeAdapter extends BaseAdapter{
-    private List<AppActivity.AppInfo> appInfoList;
+    private List<AppFragment.AppInfo> appInfoList;
     private Context context;
 
-    public AppUseTimeAdapter(List<AppActivity.AppInfo> appInfoList, Context context) {
+    public AppUseTimeAdapter(List<AppFragment.AppInfo> appInfoList, Context context) {
         this.appInfoList = appInfoList;
         this.context = context;
     }
@@ -83,7 +61,7 @@ public class AppUseTimeAdapter extends BaseAdapter{
             vh= (ViewHolder) convertView.getTag();
         }
         //2.填充数据
-        AppActivity.AppInfo app=appInfoList.get(position);
+        AppFragment.AppInfo app=appInfoList.get(position);
         //设置图片圆角角度
         RoundedCorners roundedCorners = new RoundedCorners(20);
         RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(300, 300);
