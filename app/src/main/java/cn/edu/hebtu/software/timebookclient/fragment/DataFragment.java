@@ -49,6 +49,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * 番茄任务情况统计
  */
@@ -74,13 +76,11 @@ public class DataFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.data_fragment_layout,container,false);
-
-        //todo 修改userId
-//        sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
-//        Long id = sharedPreferences.getLong("userId",0);
-//        userId = id.intValue();
-        userId=1;
-        serverPath = getResources().getString(R.string.sever_path);
+        sharedPreferences = getActivity().getSharedPreferences("data",MODE_PRIVATE);
+        Long id = sharedPreferences.getLong("userId",0);
+        userId = id.intValue();
+//        userId=1;
+        serverPath = getResources().getString(R.string.server_path);
         okHttpClient=new OkHttpClient();
         GsonBuilder builder=new GsonBuilder();
         gson=builder.serializeNulls().create();
@@ -128,7 +128,7 @@ public class DataFragment extends Fragment {
     }
 
     public void getPhoneUseTime(){
-        SharedPreferences sp=getContext().getSharedPreferences("actm", Context.MODE_PRIVATE);
+        SharedPreferences sp=getContext().getSharedPreferences("actm", MODE_PRIVATE);
         int sum=(int)sp.getLong("sum",0L)/1000;
         int hour=sum/3600;
         int minute=(sum-hour*3600)/60;

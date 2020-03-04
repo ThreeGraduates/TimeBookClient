@@ -45,7 +45,7 @@ public class TaskListManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasklist_manager);
-        path=getResources().getString(R.string.sever_path);
+        path=getResources().getString(R.string.server_path);
         okHttpClient=new OkHttpClient();
         GsonBuilder builder=new GsonBuilder();
         gson=builder.serializeNulls().create();

@@ -1,6 +1,7 @@
 package cn.edu.hebtu.software.timebookclient.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -46,8 +47,9 @@ public class PhoneTimeLineChartActivity extends AppCompatActivity {
     private Gson gson;
     private OkHttpClient okHttpClient;
     private String path;
-    private Long userId;
+    private int userId;
     private List<PhoneTime> phoneTimes;
+    private SharedPreferences sharedPreferences;
 
     private LineChartView lineChart;
     private TextView lineChartTitle;
@@ -63,9 +65,10 @@ public class PhoneTimeLineChartActivity extends AppCompatActivity {
         okHttpClient=new OkHttpClient();
         GsonBuilder builder=new GsonBuilder();
         gson=builder.serializeNulls().create();
-        path=getResources().getString(R.string.sever_path);
-        //todo 设置userId
-        userId=1l;
+        path=getResources().getString(R.string.server_path);
+        sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+        Long id = sharedPreferences.getLong("userId",0);
+        userId = id.intValue();
 
         lineChart=findViewById(R.id.lineChart);
         lineChartTitle=findViewById(R.id.lineChartTitle);

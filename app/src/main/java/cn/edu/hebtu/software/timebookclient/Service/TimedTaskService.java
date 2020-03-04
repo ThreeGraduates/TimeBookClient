@@ -38,13 +38,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * 定时器服务，定时查询用户每天手机应用使用时间
+ * 定时任务服务，每天12点定时向数据库中存储手机使用时间与应用使用时间
  */
 public class TimedTaskService extends Service{
     private Gson gson;
     private OkHttpClient okHttpClient;
     private String path;
-    private Long userId;
+    private int userId;
+    private SharedPreferences sharedPreferences;
 
     private Handler handler = new Handler(){
         @Override
@@ -66,9 +67,10 @@ public class TimedTaskService extends Service{
         okHttpClient=new OkHttpClient();
         GsonBuilder builder=new GsonBuilder();
         gson=builder.serializeNulls().create();
-        path=getResources().getString(R.string.sever_path);
-        //todo 设置userId
-        userId=1l;
+        path=getResources().getString(R.string.server_path);
+        sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+        Long id = sharedPreferences.getLong("userId",0);
+        userId = id.intValue();
 
 
         new Thread(){
@@ -108,7 +110,7 @@ public class TimedTaskService extends Service{
             }
         };
         Timer timer = new Timer(true);
-        //todo 设定定时任务每晚12点执行
+        //todo 设定定时任务执行时间
         timer.schedule(task,strToDateLong(new SimpleDateFormat("yyyy-MM-dd").format(new Date())+" 20:42:00"));
     }
 
@@ -144,7 +146,7 @@ public class TimedTaskService extends Service{
     public void sendPhoneRequest(){
         Log.e("执行sendPhoneRequest",new SimpleDateFormat("hh:mm:ss").format(new Date()));
         PhoneTime phoneTime=new PhoneTime();
-        phoneTime.setUserId(userId);
+        phoneTime.setUserId((long)userId);
         phoneTime.setCreateDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         int number = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1;
         int[] arr={7,1,2,3,4,5,6};

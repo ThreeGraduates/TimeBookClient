@@ -12,17 +12,20 @@ public class Task {
     private Integer priority;  //任务优先级
     private Date createDate;   //任务创建日期
     private Date expireDate; //任务截止日期
-    private Timestamp startDateTime;  //任务开始时间
-    private Timestamp completeDateTime;//任务完成时间
+    private Date startDatetime;  //任务开始时间
+   private Date completeDatetime;//任务完成时间
     private String repeat;    //重复次数
     private String remark;    //备注
     private Long userId;//创建任务的用户
     private Long checkListId; //所属任务的任务清单
+    private String list_title;
+    private Integer list_colorId;
+    private int useTime; //任务已用过的时间
 
     public Task() {
     }
 
-    public Task(Long id, String title, Integer count, Integer flag, Integer priority, Date createDate, Date expireDate, Timestamp startDateTime, Timestamp completeDateTime, String repeat, String remark, Long userId, Long checkListId) {
+    public Task(Long id, String title, Integer count, Integer flag, Integer priority, Date createDate, Date expireDate, Date startDateTime, Date completeDateTime, String repeat, String remark, Long userId, Long checkListId, String list_title, Integer list_colorId, int usedTime) {
         this.id = id;
         this.title = title;
         this.count = count;
@@ -30,12 +33,15 @@ public class Task {
         this.priority = priority;
         this.createDate = createDate;
         this.expireDate = expireDate;
-        this.startDateTime = startDateTime;
-        this.completeDateTime = completeDateTime;
+        this.startDatetime = startDateTime;
+        this.completeDatetime = completeDateTime;
         this.repeat = repeat;
         this.remark = remark;
         this.userId = userId;
         this.checkListId = checkListId;
+        this.list_title = list_title;
+        this.list_colorId = list_colorId;
+        this.useTime = usedTime;
     }
 
     public Long getId() {
@@ -94,20 +100,20 @@ public class Task {
         this.expireDate = expireDate;
     }
 
-    public Timestamp getStartDateTime() {
-        return startDateTime;
+    public Date getStartDateTime() {
+        return startDatetime;
     }
 
-    public void setStartDateTime(Timestamp startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setStartDateTime(Date startDateTime) {
+        this.startDatetime = startDateTime;
     }
 
-    public Timestamp getCompleteDateTime() {
-        return completeDateTime;
+    public Date getCompleteDateTime() {
+        return completeDatetime;
     }
 
-    public void setCompleteDateTime(Timestamp completeDateTime) {
-        this.completeDateTime = completeDateTime;
+    public void setCompleteDateTime(Date completeDateTime) {
+        this.completeDatetime = completeDateTime;
     }
 
     public String getRepeat() {
@@ -142,6 +148,30 @@ public class Task {
         this.checkListId = checkListId;
     }
 
+    public String getList_title() {
+        return list_title;
+    }
+
+    public void setList_title(String list_title) {
+        this.list_title = list_title;
+    }
+
+    public Integer getList_colorId() {
+        return list_colorId;
+    }
+
+    public void setList_colorId(Integer list_colorId) {
+        this.list_colorId = list_colorId;
+    }
+
+    public int getUseTime() {
+        return useTime;
+    }
+
+    public void setUseTime(int usedTime) {
+        this.useTime = usedTime;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -152,12 +182,15 @@ public class Task {
                 ", priority=" + priority +
                 ", createDate=" + createDate +
                 ", expireDate=" + expireDate +
-                ", startDateTime=" + startDateTime +
-                ", completeDateTime=" + completeDateTime +
+                ", startDatetime=" + startDatetime +
+                ", completeDatetime=" + completeDatetime +
                 ", repeat='" + repeat + '\'' +
                 ", remark='" + remark + '\'' +
                 ", userId=" + userId +
                 ", checkListId=" + checkListId +
+                ", list_title='" + list_title + '\'' +
+                ", list_colorId=" + list_colorId +
+                ", useTime=" + useTime +
                 '}';
     }
 }

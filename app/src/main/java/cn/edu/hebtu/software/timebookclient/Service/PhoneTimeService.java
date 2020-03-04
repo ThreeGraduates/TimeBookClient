@@ -43,17 +43,6 @@ public class PhoneTimeService extends Service{
                 editor.putInt("lockCount", screenSaveCount + 1);
                 editor.commit();
             }
-//            }else if(intent.getAction().equals(Intent.ACTION_TIME_TICK)){  //每分钟一次
-//                //todo 单独提出这个定时器
-//                cal=Calendar.getInstance();
-//                if(cal.get(Calendar.HOUR_OF_DAY)==0&& cal.get(Calendar.MINUTE)==0){
-//                    //每天凌晨自动更新数据
-//                    editor.putLong("sum",0L);
-//                    editor.putInt("unlockCount",0);
-//                    editor.putInt("lockCount",0);
-//                    editor.commit();
-//                }
-//            }
         }
     };
 
@@ -63,7 +52,6 @@ public class PhoneTimeService extends Service{
         final IntentFilter filter=new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-//        filter.addAction(Intent.ACTION_TIME_TICK);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         //注册广播（动态注册方式）
         registerReceiver(receiver,filter);
@@ -79,7 +67,7 @@ public class PhoneTimeService extends Service{
 
     @Override
     public void onDestroy() {
-//        Log.e("PhoneTimeService","onDestroy");
+        Log.e("PhoneTimeService","onDestroy");
         unregisterReceiver(receiver);
         super.onDestroy();
     }

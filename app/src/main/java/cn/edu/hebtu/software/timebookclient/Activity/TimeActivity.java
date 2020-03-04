@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import cn.edu.hebtu.software.timebookclient.R;
 
-public class TodayTaskActivity extends AppCompatActivity {
+public class TimeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_today_task);
+        setContentView(R.layout.activity_time);
     }
 }

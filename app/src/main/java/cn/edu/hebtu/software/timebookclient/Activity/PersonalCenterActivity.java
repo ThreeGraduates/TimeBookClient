@@ -73,7 +73,7 @@ public class PersonalCenterActivity extends AppCompatActivity {
         Intent intent=getIntent();
         user= (User) intent.getSerializableExtra("user");
         Log.e("personal",user.toString());
-        path=getResources().getString(R.string.sever_path);
+        path=getResources().getString(R.string.server_path);
         GsonBuilder builder=new GsonBuilder();
         gson=builder.serializeNulls().create();
         okHttpClient=new OkHttpClient();

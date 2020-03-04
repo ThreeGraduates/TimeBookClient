@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,9 +33,12 @@ import java.util.List;
 
 import cn.edu.hebtu.software.timebookclient.Adapter.DateListAdapter;
 import cn.edu.hebtu.software.timebookclient.Adapter.TaskListAdapter;
+import cn.edu.hebtu.software.timebookclient.Bean.Task;
 import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
 import cn.edu.hebtu.software.timebookclient.Bean.User;
 import cn.edu.hebtu.software.timebookclient.R;
+import cn.edu.hebtu.software.timebookclient.Service.PhoneTimeService;
+import cn.edu.hebtu.software.timebookclient.Service.TimedTaskService;
 import cn.edu.hebtu.software.timebookclient.Util.DateTitle;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,8 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private String serverPath;//服务器地址
     private User currentUser = new User();
     private List<DateTitle> dateTitleList = new ArrayList<DateTitle>();
-    private List<TaskList> taskListList = new ArrayList<TaskList>();
+    private ArrayList<TaskList> taskListList = new ArrayList<TaskList>();
     private ImageView ivAvatar;//填充用户头像的控件
+    private ImageView ivData; //报表
     private TextView tvUsername;//填充用户名的控件
     private TextView tvUserSignature;//填充用户个性签名的控件
     private ListView lvDateTitles;
@@ -58,25 +63,43 @@ public class MainActivity extends AppCompatActivity {
     private DateListAdapter dateListAdapter;
     private TaskListAdapter taskListAdapter;
     private UserHandler userHandler = new UserHandler();
+    private Long currentUserId;
+
+    private int listPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //启动接收手机使用情况广播的服务
+        startService(new Intent(MainActivity.this,PhoneTimeService.class));
+        //开始定时任务的服务
+        startService(new Intent(MainActivity.this, TimedTaskService.class));
+
         //获取布局控件
         ivAvatar = findViewById(R.id.iv_avatar);
+        ivData=findViewById(R.id.iv_data);
         tvUsername = findViewById(R.id.tv_username);
         tvUserSignature = findViewById(R.id.tv_signature);
         lvDateTitles = findViewById(R.id.lv_datelist);
         lvTaskList = findViewById(R.id.lv_tasklist);
         rlCreate = findViewById(R.id.rl_create);
 
-        serverPath = getResources().getString(R.string.sever_path);
+        serverPath = getResources().getString(R.string.server_path);
 
         sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
-        Long id = sharedPreferences.getLong("userId",0);
-        final Integer userId = id.intValue();
+        currentUserId = sharedPreferences.getLong("userId",0);
+
+        final Integer userId = currentUserId.intValue();
+        currentUser.setId(currentUserId);
+        //跳转到报表页面
+        ivData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ChartActivity.class));
+            }
+        });
 
         //开启异步请求获取任务清单数据
         Request request = new Request.Builder()
@@ -201,13 +224,19 @@ public class MainActivity extends AppCompatActivity {
 
             //初始化 DateListAdapter 并绑定适配器
             dateListAdapter = new DateListAdapter(dateTitleList,MainActivity.this,R.layout.datelist_item_layout);
+
             lvDateTitles.setAdapter(dateListAdapter);
             lvDateTitles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //为各个子项绑定点击事件监听
                     Log.e("MainActivity","lvDateTitles:点击各个子项");
+                    Intent taskIntent = new Intent(MainActivity.this,CreateTaskActivity.class);
 
+                    taskIntent.putExtra("taskList",  taskListList);
+                    taskIntent.putExtra("currentUser",currentUser);
+                    taskIntent.putExtra("flag",(int)id);
+                    startActivity(taskIntent);
                 }
             });
 
@@ -217,11 +246,19 @@ public class MainActivity extends AppCompatActivity {
             taskListAdapter.notifyDataSetChanged();
             lvTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                     //为各个子项绑定点击事件监听
-                    Log.e("MainActivity","lvTaskList:点击各个子项");
+                    Intent listIntent = new Intent(MainActivity.this,CreateTaskActivity.class);
+                    listIntent.putExtra("taskList",taskListList);
+                    listIntent.putExtra("currentUser",currentUser);
+                    listIntent.putExtra("flag",3);
+                    listIntent.putExtra("listPosition",position);
+                    startActivity(listIntent);
+
                 }
             });
         }
     }
+
 }
+

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import cn.edu.hebtu.software.timebookclient.R;
@@ -31,13 +32,6 @@ public class ChartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
-
-        //todo 启动计算手机屏幕使用时间的服务
-        startService(new Intent(ChartActivity.this,PhoneTimeService.class));
-        //todo 开启手机app时间定时任务服务
-        startService(new Intent(ChartActivity.this, TimedTaskService.class));
-
-
         fragmentManager=getSupportFragmentManager();
         showFragment(dataFragment);
         dataTab=findViewById(R.id.tab1);
@@ -47,6 +41,15 @@ public class ChartActivity extends AppCompatActivity {
         appTab.setBackgroundColor(Color.WHITE);
         dataTab.setOnClickListener(new TabClickListener());
         appTab.setOnClickListener(new TabClickListener());
+        //返回上一级
+        ImageView ivReturn=findViewById(R.id.chart_return);
+        ivReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChartActivity.this,MainActivity.class));
+                finish();
+            }
+        });
     }
 
     private void showFragment(Fragment fragment){

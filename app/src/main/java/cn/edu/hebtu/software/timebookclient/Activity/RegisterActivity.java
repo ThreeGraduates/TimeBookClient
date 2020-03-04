@@ -49,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         //获取布局控件
         findView();
-        serverPath = getResources().getString(R.string.sever_path);
+        serverPath = getResources().getString(R.string.server_path);
         user = new User();
         //为返回按钮绑定点击监听事件 结束当前页面
         btnBack.setOnClickListener(new View.OnClickListener() {

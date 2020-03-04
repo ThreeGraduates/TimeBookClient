@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/today_task_show"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/btn_isfinish"
+        android:background="@drawable/unfinish"
+        android:layout_centerVertical="true"
+        android:layout_margin="15dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+
+    <TextView
+        android:id="@+id/tv_taskname"
+        android:text="设计添加任务的页面"
+        android:textSize="20sp"
+        android:textColor="@color/inkGray"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/btn_isfinish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/ll_list"
+        android:orientation="horizontal"
+        android:layout_below="@id/tv_taskname"
+        android:layout_marginTop="4dp"
+        android:layout_alignLeft="@id/tv_taskname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_color_icon"
+            android:background="@color/color1"
+            android:layout_gravity="center"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+
+        <TextView
+            android:id="@+id/tv_listname"
+            android:text="毕设系列"
+            android:gravity="center_vertical"
+            android:textColor="@color/warmRed"
+            android:layout_marginLeft="5dp"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tomato"
+        android:layout_below="@id/tv_taskname"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/ll_list"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:background="@drawable/finish_tomato"
+            android:layout_marginTop="3dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+        <TextView
+            android:id="@+id/tv_finish_tomato_count"
+            android:text="4"
+            android:layout_gravity="center_vertical"
+            android:textSize="16sp"
+            android:textColor="@color/finishFontColor"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="/"
+            android:textSize="16sp"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/FontGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:background="@drawable/unfinish_tomato"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="4dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+        <TextView
+            android:id="@+id/tv_total_tomato_count"
+            android:text="8"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/unfinishFontColor"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_expire_date"
+        android:text="2月28日"
+        android:textSize="16sp"
+        android:textColor="@color/warmRed"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/btn_delete"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_toLeftOf="@id/btn_start_task"
+        android:background="@drawable/delete"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+
+    <Button
+        android:id="@+id/btn_start_task"
+        android:background="@drawable/start"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+
+</RelativeLayout>

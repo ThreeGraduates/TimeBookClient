@@ -23,7 +23,7 @@ import cn.edu.hebtu.software.timebookclient.Bean.AppTime;
 public class AppTimeUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static List<AppTime> getTodayAppTime(Context context,Long userId) throws ParseException {
+    public static List<AppTime> getTodayAppTime(Context context,int userId) throws ParseException {
         //确定时间范围
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UsageStatsManager usm = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
@@ -54,7 +54,7 @@ public class AppTimeUtils {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo(us.getPackageName(), PackageManager.GET_META_DATA);
                     if ((applicationInfo.flags & applicationInfo.FLAG_SYSTEM) <= 0) {  //去除系统应用
                         AppTime appTime=new AppTime();
-                        appTime.setUserId(userId);
+                        appTime.setUserId((long)userId);
                         appTime.setAppName(pm.getApplicationLabel(applicationInfo) + "");
                         appTime.setTime(us.getTotalTimeInForeground());
                         appTime.setCreateDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
