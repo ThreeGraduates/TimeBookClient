@@ -1,9 +1,10 @@
 package cn.edu.hebtu.software.timebookclient.Bean;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class Task {
+public class Task implements Serializable {
 
     private Long id;
     private String title;

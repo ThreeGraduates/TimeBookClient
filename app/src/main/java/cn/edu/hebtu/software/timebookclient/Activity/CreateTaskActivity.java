@@ -75,9 +75,9 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
     private ListView lvFinishTasklist;
     private boolean show = false;//默认不展示已完成任务列表
     private LinearLayout llSummary;
-    private List<Task> totalTaskList = new ArrayList<Task>();
-    private List<Task> unfinishTaskList = new ArrayList<Task>();
-    private List<Task> finishTaskList = new ArrayList<Task>();
+    private ArrayList<Task> totalTaskList = new ArrayList<Task>();
+    private ArrayList<Task> unfinishTaskList = new ArrayList<Task>();
+    private ArrayList<Task> finishTaskList = new ArrayList<Task>();
     private UnfinishListAdapter unfinishListAdapter ;
     private FinishListAdapter finishListAdapter;
     private String serverPath;
@@ -119,7 +119,7 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
         taskLists = (ArrayList<TaskList>) mainIntent.getSerializableExtra("taskList");
         flag = mainIntent.getIntExtra("flag",-1);
         listPosition = mainIntent.getIntExtra("listPosition",-1);
-
+        Log.e("CreateTaskActivity",flag+"");
         switch (flag){
             case 0:
                 //从主页点击了"今天"跳转到该页面
@@ -329,9 +329,16 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
                 finishListAdapter.setTvFinishCount(tvFinishCount);
                 unfinishListAdapter.setTvUsedTime(tvUsedTime);
                 finishListAdapter.setTvUsedTime(tvUsedTime);
+                unfinishListAdapter.setBreakTime(currentUser.getShortBreak());
 
                 unfinishListAdapter.setFinishListAdapter(finishListAdapter);
                 finishListAdapter.setUnfinishListAdapter(unfinishListAdapter);
+
+                unfinishListAdapter.setCurrentUser(currentUser);
+                unfinishListAdapter.setTaskLists(taskLists);
+                unfinishListAdapter.setListPosition(listPosition);
+                unfinishListAdapter.setEnterFlag(flag);
+
                 //为unfinishListView绑定adapter
                 lvUnfinishTasklist.setAdapter(unfinishListAdapter);
                 //为finishListView绑定adapter

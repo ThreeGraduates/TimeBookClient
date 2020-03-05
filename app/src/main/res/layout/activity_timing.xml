@@ -1,9 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rl_startTaskRoot"
+    android:background="@drawable/start_task_background"
     tools:context=".Activity.TimingActivity">
+    
+    <RelativeLayout
+        android:background="@drawable/task_title_style"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_taskname"
+            android:textSize="24sp"
+            android:textColor="@color/inkGray"
+            android:text="任务开始界面"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"/>
+        <LinearLayout
+            android:id="@+id/ll_tomato"
+            android:layout_below="@id/tv_taskname"
+            android:layout_alignLeft="@id/tv_taskname"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:background="@drawable/finish_tomato"
+                android:layout_marginTop="3dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+            <TextView
+                android:id="@+id/tv_finish_tomato_count"
+                android:text="4"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:textColor="@color/finishFontColor"
+                android:layout_marginLeft="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="/"
+                android:textSize="16sp"
+                android:layout_marginLeft="2dp"
+                android:textColor="@color/FontGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:background="@drawable/unfinish_tomato"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="4dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+            <TextView
+                android:id="@+id/tv_total_tomato_count"
+                android:text="8"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/unfinishFontColor"
+                android:layout_marginLeft="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_expire_date"
+            android:textSize="18sp"
+            android:text="2020-3-5"
+            android:textColor="@color/warmRed"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+    </RelativeLayout>
+   
+    
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_minute"
+            android:text="30"
+            android:textColor="@color/white"
+            android:textSize="75sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_colon"
+            android:background="@drawable/colon"
+            android:layout_toRightOf="@id/tv_minute"
+            android:layout_marginTop="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:id="@+id/tv_second"
+            android:text="00"
+            android:textColor="@color/white"
+            android:textSize="75sp"
+            android:layout_toRightOf="@id/iv_colon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <Button
+        android:id="@+id/btn_gohead"
+        android:background="@drawable/circle_border"
+        android:text="继续"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="85dp"
+        android:layout_marginBottom="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp" />
+    <Button
+        android:id="@+id/btn_pause"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_centerHorizontal="true"
+        android:text="暂停"
+        android:textSize="20sp"
+        android:background="@drawable/circle_border"
+        android:layout_width="70dp"
+        android:layout_height="70dp" />
+    <Button
+        android:id="@+id/btn_stop"
+        android:visibility="gone"
+        android:layout_marginRight="85dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:text="停止"
+        android:textSize="20sp"
+        android:background="@drawable/circle_border"
+        android:layout_width="70dp"
+        android:layout_height="70dp" />
+
+</RelativeLayout>

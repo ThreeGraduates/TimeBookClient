@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +34,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FinishListAdapter extends BaseAdapter {
+public class FinishListAdapter extends BaseAdapter implements Serializable {
 
     private Context context;
     private List<Task> finishTaskList = new ArrayList<Task>();
@@ -291,5 +292,38 @@ public class FinishListAdapter extends BaseAdapter {
         public LinearLayout llTomato;
         public Button btnDelete;
         public Button btnStartTask;
+    }
+
+    public FinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout, int tomatoTime, UnfinishListAdapter unfinishListAdapter, String serverPath, int flag, TextView tvPlanTime, TextView tvUnfinishCount, TextView tvFinishCount, TextView tvUsedTime) {
+        this.context = context;
+        this.finishTaskList = finishTaskList;
+        this.unfinishTaskList = unfinishTaskList;
+        this.itemLayout = itemLayout;
+        this.tomatoTime = tomatoTime;
+        this.unfinishListAdapter = unfinishListAdapter;
+        this.serverPath = serverPath;
+        this.flag = flag;
+        this.tvPlanTime = tvPlanTime;
+        this.tvUnfinishCount = tvUnfinishCount;
+        this.tvFinishCount = tvFinishCount;
+        this.tvUsedTime = tvUsedTime;
+    }
+
+    @Override
+    public String toString() {
+        return "FinishListAdapter{" +
+                "context=" + context +
+                ", finishTaskList=" + finishTaskList +
+                ", unfinishTaskList=" + unfinishTaskList +
+                ", itemLayout=" + itemLayout +
+                ", tomatoTime=" + tomatoTime +
+                ", unfinishListAdapter=" + unfinishListAdapter +
+                ", serverPath='" + serverPath + '\'' +
+                ", flag=" + flag +
+                ", tvPlanTime=" + tvPlanTime +
+                ", tvUnfinishCount=" + tvUnfinishCount +
+                ", tvFinishCount=" + tvFinishCount +
+                ", tvUsedTime=" + tvUsedTime +
+                '}';
     }
 }

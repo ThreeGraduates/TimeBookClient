@@ -3,6 +3,8 @@ package cn.edu.hebtu.software.timebookclient.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +19,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import cn.edu.hebtu.software.timebookclient.Activity.TimingActivity;
 import cn.edu.hebtu.software.timebookclient.Bean.Task;
+import cn.edu.hebtu.software.timebookclient.Bean.TaskList;
+import cn.edu.hebtu.software.timebookclient.Bean.User;
 import cn.edu.hebtu.software.timebookclient.R;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,22 +38,27 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UnfinishListAdapter extends BaseAdapter {
+public class UnfinishListAdapter extends BaseAdapter{
     private Context context;
-    private List<Task> finishTaskList;
-    private List<Task> unfinishTaskList;
+    private ArrayList<Task> finishTaskList;
+    private ArrayList<Task> unfinishTaskList;
     private int itemLayout;
     private int tomatoTime;
+    private int breakTime;
     private FinishListAdapter finishListAdapter;
     private String serverPath;
+    private User currentUser;
+    private ArrayList<TaskList> taskLists = new ArrayList<TaskList>();
+    private int listPosition;
     private int flag;
+    private int enterFlag;
 
     private TextView tvPlanTime;
     private TextView tvUnfinishCount;
     private TextView tvFinishCount;
     private TextView tvUsedTime;
 
-    public UnfinishListAdapter(Context context, List<Task> finishTaskList, List<Task> unfinishTaskList, int itemLayout,int tomatoTime,int flag) {
+    public UnfinishListAdapter(Context context, ArrayList<Task> finishTaskList, ArrayList<Task> unfinishTaskList, int itemLayout,int tomatoTime,int flag) {
         this.context = context;
         this.finishTaskList = finishTaskList;
         this.unfinishTaskList = unfinishTaskList;
@@ -62,6 +74,22 @@ public class UnfinishListAdapter extends BaseAdapter {
 
     public void setFinishListAdapter(FinishListAdapter finishListAdapter) {
         this.finishListAdapter = finishListAdapter;
+    }
+
+    public ArrayList<Task> getFinishTaskList() {
+        return finishTaskList;
+    }
+
+    public void setFinishTaskList(ArrayList<Task> finishTaskList) {
+        this.finishTaskList = finishTaskList;
+    }
+
+    public ArrayList<Task> getUnfinishTaskList() {
+        return unfinishTaskList;
+    }
+
+    public void setUnfinishTaskList(ArrayList<Task> unfinishTaskList) {
+        this.unfinishTaskList = unfinishTaskList;
     }
 
     public TextView getTvPlanTime() {
@@ -94,6 +122,46 @@ public class UnfinishListAdapter extends BaseAdapter {
 
     public void setTvUsedTime(TextView tvUsedTime) {
         this.tvUsedTime = tvUsedTime;
+    }
+
+    public int getBreakTime() {
+        return breakTime;
+    }
+
+    public void setBreakTime(int breakTime) {
+        this.breakTime = breakTime;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public ArrayList<TaskList> getTaskLists() {
+        return taskLists;
+    }
+
+    public void setTaskLists(ArrayList<TaskList> taskLists) {
+        this.taskLists = taskLists;
+    }
+
+    public int getListPosition() {
+        return listPosition;
+    }
+
+    public void setListPosition(int listPosition) {
+        this.listPosition = listPosition;
+    }
+
+    public int getEnterFlag() {
+        return enterFlag;
+    }
+
+    public void setEnterFlag(int enterFlag) {
+        this.enterFlag = enterFlag;
     }
 
     @Override
@@ -346,6 +414,17 @@ public class UnfinishListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //跳转至开始任务页面
+                Intent intent = new Intent(context,TimingActivity.class);
+                intent.putExtra("tomatoTime",tomatoTime);
+                intent.putExtra("task",unfinishTaskList.get(position));
+                intent.putExtra("unfinishTaskList",unfinishTaskList);
+                intent.putExtra("finishTaskList",finishTaskList);
+                intent.putExtra("breakTime",breakTime);
+                intent.putExtra("currentUser",currentUser);
+                intent.putExtra("flag",enterFlag);
+                intent.putExtra("taskList",taskLists);
+                intent.putExtra("listPosition",listPosition);
+                context.startActivity(intent);
             }
         });
 
@@ -366,4 +445,5 @@ public class UnfinishListAdapter extends BaseAdapter {
         public ImageView colorIcon;
         public TextView tvListname;
     }
+
 }
