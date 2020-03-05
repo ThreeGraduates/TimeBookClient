@@ -136,10 +136,11 @@ public class TimingActivity extends AppCompatActivity {
                         timer.cancel();
                         unfinishTaskList.remove(task);
                         task.setFlag(2);
+                        task.setUseTime(usedCount*currentTomatoTime+Integer.parseInt(tvMinute.getText().toString()));
 
                         //开启异步任务 从服务器端更改用户状态放弃任务
                         Request request = new Request.Builder()
-                                .url(serverPath+"task/giveUpTask?taskId="+task.getId())
+                                .url(serverPath+"task/giveUpTask?taskId="+task.getId()+"&useTime="+task.getUseTime())
                                 .build();
                         OkHttpClient okHttpClient = new OkHttpClient();
                         Call call = okHttpClient.newCall(request);
@@ -174,8 +175,6 @@ public class TimingActivity extends AppCompatActivity {
         });
 
         startRun();
-
-
 
     }
 
@@ -239,6 +238,7 @@ public class TimingActivity extends AppCompatActivity {
                 //表明该轮倒计时结束 判断是任务倒计时结束还是休息倒计时结束
                 if(mMin == 0 && mSecond == 0&&isTask){
                     //表明 任务倒计时结束
+                    isTask = false;
                     task.setUseTime(task.getUseTime()+currentTomatoTime);
                     usedCount ++;
                     tvFinishTomatoCount.setText(usedCount+"");
@@ -279,7 +279,7 @@ public class TimingActivity extends AppCompatActivity {
 
                             //开启异步任务 服务器端更改用户状态
                             Request request = new Request.Builder()
-                                    .url(serverPath+"task/transFormTaskStatus?taskId="+task.getId()+"&flag="+0)
+                                    .url(serverPath+"task/completeTask?taskId="+task.getId()+"&useTime="+task.getUseTime())
                                     .build();
                             OkHttpClient okHttpClient = new OkHttpClient();
                             Call call = okHttpClient.newCall(request);
@@ -312,6 +312,7 @@ public class TimingActivity extends AppCompatActivity {
     //任务开始倒计时 执行的操作
     private void startTask(){
         timer.cancel();
+        isTask = true;
         rlRoot.setBackgroundResource(R.drawable.start_task_background);
         mMin = currentTomatoTime;
         mSecond = 0;
@@ -320,6 +321,15 @@ public class TimingActivity extends AppCompatActivity {
         startRun();
         btnPause.setVisibility(View.VISIBLE);
         btnPause.setText("暂停");
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timer.cancel();
+                btnPause.setVisibility(View.GONE);
+                btnGoAhead.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.VISIBLE);
+            }
+        });
 
     }
 

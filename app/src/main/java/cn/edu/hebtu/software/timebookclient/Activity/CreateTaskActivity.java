@@ -277,7 +277,7 @@ public class CreateTaskActivity extends AppCompatActivity implements NumberPicke
     }
 
     public  void findView(){
-        rlRoot = findViewById(R.id.rl_create_task);
+        rlRoot = findViewById(R.id.rl_root);
         tvDate = findViewById(R.id.tv_date);
         btnBack = findViewById(R.id.btn_back);
         tvPlanTime = findViewById(R.id.tv_plan_time);
